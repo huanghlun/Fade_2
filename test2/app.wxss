@@ -1,0 +1,115 @@
+/**app.wxss**/
+@import 'weui.wxss';
+
+.container {
+  height: 100%;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  overflow: scroll;
+} 
+
+.uploading_container {
+  height: 0px;
+  overflow: hidden;
+  transition: height 1s;
+  -webkit-transition: height 1s;
+}
+
+.uploading_show {
+  height: 50px;
+  overflow: hidden;
+}
+
+.uploading {
+  position: relative;
+  text-align: center;
+  padding: 5px auto;
+  /* height: auto; */
+  margin: 10px 0px;
+  opacity: 1;
+  transform: translateY(0);
+  -webikit-transform: translateY(0);
+  transition: 1s;
+  -webkit-transition: 1s;
+}
+
+.uploading_translate {
+  opacity: 0;
+  transform: translateY(-50px);
+  -webkit-transform: translateY(-50px);
+}
+
+.firstPoint {
+  display: inline-block;
+  height:10px;
+  width:10px;
+  border-radius: 50%;
+  margin: 0px 4px;
+  background-color: #c9c9c9;
+  -webkit-animation: breathe1 1500ms linear infinite;
+  -moz-animation: breathe1 1500ms linear infinite;
+  -o-animation: breathe1 1500ms linear infinite;
+  animation: breathe1 1500ms linear infinite;
+}
+
+.secondPoint {
+  display: inline-block;
+  height:10px;
+  width:10px;
+  border-radius: 50%;
+  margin: 0px 4px;
+  background-color: #c9c9c9;
+  -webkit-animation: breathe2 1500ms linear infinite;
+  -moz-animation: breathe2 1500ms linear infinite;
+  -o-animation: breathe2 1500ms linear infinite;
+  animation: breathe2 1500ms linear infinite;
+}
+
+.thirdPoint {
+  display: inline-block;
+  height:10px;
+  width:10px;
+  border-radius: 50%;
+  margin: 0px 4px;
+  background-color: #c9c9c9;
+  -webkit-animation: breathe3 1500ms linear infinite;
+  -moz-animation: breathe3 1500ms linear infinite;
+  -o-animation: breathe3 1500ms linear infinite;
+  animation: breathe3 1500ms linear infinite;
+}
+
+@keyframes breathe1 {
+  0% {background-color: #444444;}
+  50% {background-color: #c9c9c9;}
+  100% {background-color: #c9c9c9;}
+}
+
+@-webkit-keyframes breathe1 {
+  0% {background-color: #444444;}
+  50% {background-color: #c9c9c9;}
+  100% {background-color: #c9c9c9;}
+}
+
+@keyframes breathe2 {
+  50% {background-color: #444444;}
+  0% {background-color: #c9c9c9;}
+  100% {background-color: #c9c9c9;}
+}
+
+@-webkit-keyframes breathe2 {
+  50% {background-color: #444444;}
+  0% {background-color: #c9c9c9;}
+  100% {background-color: #c9c9c9;}
+}
+
+@keyframes breathe3 {
+  100% {background-color: #444444;}
+  50% {background-color: #c9c9c9;}
+  0% {background-color: #c9c9c9;}
+}
+
+@-webkit-keyframes breathe3 {
+  100% {background-color: #444444;}
+  50% {background-color: #c9c9c9;}
+  0% {background-color: #c9c9c9;}
+}
