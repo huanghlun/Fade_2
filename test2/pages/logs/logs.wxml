@@ -1,0 +1,20 @@
+<!--logs.wxml-->
+<view class="container">
+    <view class="img_name_container">
+      <image class="log_avatar" src="{{userInfo.avatarUrl}}"></image>
+      <text class="nickname">{{userInfo.nickName}}</text>
+    </view>
+    <view class="setting">
+      <navigator class="setting_items" url="">
+        <view class="setting_hd">Fadename</view>
+        <view class="setting_content">{{fadeID}}</view>
+        <view class="setting_cell_ft"></view>
+      </navigator>
+      <navigator class="setting_items" url="">
+        <view class="setting_hd">Gender</view>
+        <view class="setting_content">{{userInfo.gender?"Male":"Female"}}</view>
+        <view class="setting_cell_ft"></view>
+      </navigator>
+      
+    </view>
+</view>

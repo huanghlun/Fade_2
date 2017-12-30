@@ -1,0 +1,145 @@
+/**index.wxss**/
+page{
+  background-color: gainsboro;
+  height: 100%;
+  width: 100%;
+}
+
+.information_container{
+    margin-bottom: 10px;
+    background-color: #fff;
+    font-size: 15px;
+}
+
+.info_line{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    margin: 5px 5px;
+    padding-top: 5px;
+    padding-right: 5px;
+    -webkit-box-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+    position: relative;
+    width: auto;
+    height: auto;
+}
+
+.imgContainer{
+  position: relative;
+  margin-left: 5px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.content_photo{
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar{
+  height: 40px;
+  width: 40px;
+  overflow:hidden;
+  border-radius: 50%;
+  vertical-align: middle;
+}
+
+.info_flex_item{
+  flex-grow:0;
+  -webkit-box-flex:0;
+  -webkit-flex:0;
+  flex:0;
+  margin-left: 10px;
+}
+
+.info_flex_item_span{
+  flex-grow:1;
+  -webkit-box-flex:1;
+  -webkit-flex:1;
+  flex:1;
+  margin-left: 10px;
+}
+
+.content_line{
+  margin: 5px 5px;
+}
+
+.content_item{
+  margin-left: 5px;
+}
+
+.desc_item{
+  margin-top: 2px;
+  font-weight: bold;
+}
+
+.label_container{
+  display: flex;
+}
+
+.label{
+   flex-grow:0;
+   margin-right: 10px;
+   padding: 0px 2px;
+   border: 1px gray solid;
+   border-radius: 10%;
+}
+
+.interact_line{
+  display: flex;
+  align-items: center;
+  width: auto;
+  height: auto;
+  padding-right: 5px;
+  margin: 5px 5px;
+}
+
+.interact_flex_item_first {
+  margin-left: 5px;
+  color: #bbb;
+  font-weight: bold;
+}
+
+.interact_flex_item{
+  display: inline-block;
+  margin-left: 20px;
+}
+
+.interact_flex_item_span{
+  position:relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  margin-left: 5px;
+}
+
+.zan_{
+  display: inline-block;
+}
+
+.icon{
+  width:20px; height:20px; overflow:hidden;
+  vertical-align: middle;
+  margin-bottom: 3px;
+}
+
+.searchbar-result{
+    position: relative;
+    margin-top: 0;
+    font-size: 14px;
+    height: 100%;
+}
+.searchbar-result:before{
+    display: none;
+}
+.weui-cell{
+    padding: 12px 15px 12px 35px;
+}
+
+.downloading {
+  margin: 0.5em auto;
+  text-align: center;
+}

@@ -1,0 +1,34 @@
+{
+  "pages":[
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/video/video",
+    "example/panel/panel"
+  ],
+  "window":{
+    "backgroundTextStyle":"light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Fade",
+    "navigationBarTextStyle":"black",
+    "enablePullDownRefresh": "true"
+  },
+  "tabBar":{
+    "selectedColor": "#29abe2",
+    "color": "#000000",
+    "backgroundColor": "#fff",
+    "list":[
+      {
+        "text": "发现",
+        "pagePath":"pages/index/index",
+        "iconPath": "image/icon/发现静态.png",
+        "selectedIconPath": "image/icon/发现激活.png"
+      },
+      {
+        "text": "个人",
+        "pagePath":"pages/logs/logs",
+        "iconPath": "image/icon/我的静态.png",
+        "selectedIconPath": "image/icon/我的激活.png"
+      }
+    ]
+  }
+}
