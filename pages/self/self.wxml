@@ -1,0 +1,33 @@
+<!--pages/self/self.wxml-->
+<view class="setting">
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">头像</view>
+    <view class="setting_content"><image class="log_avatar" src="{{fadeuserInfo.head_image_url}}"></image></view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">昵称</view>
+    <view class="setting_content">{{fadeuserInfo.nickname}}</view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">Fadename</view>
+    <view class="setting_content">{{fadeuserInfo.fade_name}}</view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">个性签名</view>
+    <view class="setting_content">{{fadeuserInfo.summary}}</view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">性别</view>
+    <view class="setting_content">{{fadeuserInfo.sex}}</view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+  <navigator class="setting_items" url="">
+    <view class="setting_hd">地区</view>
+    <view class="setting_content">{{fadeuserInfo.area?fadeuserInfo.area:""}}</view>
+    <view class="setting_cell_ft"></view>
+  </navigator>
+</view>

@@ -1,0 +1,33 @@
+/* pages/detail/detail.wxss */
+.hot_comment_container {
+  margin-top: 17rpx;
+}
+
+.comment_hd, .comment_line {
+  padding-left: 17rpx;
+}
+
+.comment_hd {
+  margin-top: 35rpx;
+  font-size:  28rpx;
+  color: #4f4f4f;
+}
+
+.comment_avatar {
+  height: 50rpx;
+  width: 50rpx;
+}
+
+.comment_time {
+  padding-right: 40rpx;
+  font-size: 24rpx;
+}
+
+.info_flex_item text {
+  font-size: 24rpx;
+}
+
+.comment_line {
+  padding-right: 39rpx;
+  font-size: 27rpx;
+}

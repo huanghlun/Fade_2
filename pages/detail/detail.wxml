@@ -1,0 +1,56 @@
+<!--pages/detail/detail.wxml-->
+<view class="information_container">
+  <view class="info_line">
+    <view class="imgContainer">
+      <image src="{{item.user.avatarUrl}}" class="avatar"></image>
+    </view>
+    <view class="info_flex_item_span">
+      <view>{{item.user.nickname}}</view>
+      <view wx:if="{{item.user.summary}}">{{item.user.summary}}</view>
+    </view>
+  </view>
+  <view class="content_line">
+      <view wx:if="{{item.photoList.length > 0}}" style="height: {{item.real_height}}px; width: {{item.photo_width}}px; margin-left: -17rpx; overflow:hidden;">
+      <image src="{{item.photoList[0].image_url}}" style="height: {{item.photo_height}}px; width:{{item.photo_width}}px; overflow: hidden;" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.pos}}"></image>
+    </view>
+    <view class="content_item">
+      <view class="desc_item">{{item.text_describe}}
+        <label wx:for='{{item.other_repost}}' wx:for-item="i">
+          <span class="author_item">//@{{i.nickname}}：</span>
+          <span>{{i.note_content}}</span>
+        </label>
+      </view>
+      <view class="orgin_item" wx:if="{{item.isRelay != 0}}">
+          <view class="author_item">@{{item.origin_note.nickname}}</view>
+          <view>{{item.origin_note.note_content}}</view> 
+      </view>
+      <view class="desc_item line18">{{item.zan_num}} 续秒</view>
+      <view class="time_item">剩余{{item.life}}</view>
+      <view class="pos_item">发表于{{item.post_pos}}</view>
+    </view>
+  </view>
+  <view class="interact_line">
+    <view class="interact_flex_item" catchtap="tapzan"><image src="{{item.tapZan?'../../image/发现/+1S激活.png' : '../../image/发现/+1 静态.png'}}" data-pos="{{item.pos}}"  class="icon" style="width:{{item.zanWidth}}rpx;"  ></image></view>
+    <view class="interact_flex_item"><image src="{{comment_picture}}" class="icon"></image></view>
+    <view class="interact_flex_item"><image src="{{repost_picture}}" class="icon"></image></view>
+  </view>
+  <view class="hot_comment_container">
+    <view class='comment_hd'>热门评论</view>
+    <block wx:for="{{hot_comment_list}}" wx:key="user.note_id" wx:for-item="comment_item">
+      <view class="comment_container">
+        <view class="info_line">
+          <view class="imgContainer">
+            <image src="{{comment_item.head_image_url}}" class="avatar comment_avatar"></image>
+          </view>
+          <view class="info_flex_item_span" style='font-size:31rpx;'>{{comment_item.nickname}}</view>
+          <view class="info_flex_item comment_time">{{comment_item.comment_time}}</view>
+          <view class="info_flex_item">
+            <view class="imgContainer" style='padding-right: 20rpx;'><image src="../../image/comment_good.png" style='width:25rpx;' mode="widthFix"></image></view>
+            <text>{{comment_item.comment_good_num}}</text>
+          </view>
+        </view>
+        <view class="comment_line">{{comment_item.comment_content}}</view>
+      </view>
+    </block>
+  </view>
+</view>

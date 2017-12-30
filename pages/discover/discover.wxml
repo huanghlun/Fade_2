@@ -1,0 +1,83 @@
+<!--index.wxml-->
+  <view class="{{uphidden? 'uploading_container' : 'uploading_show'}}"> 
+    <view class="uploading {{uphidden?'uploading_translate':''}}">
+      <view class="firstPoint"></view>
+      <view class="secondPoint"></view>
+      <view class="thirdPoint"></view>
+    </view>
+  </view>
+  <view class="weui-search-bar">
+    <view class="weui-search-bar__form">
+        <view class="weui-search-bar__box">
+            <icon class="weui-icon-search_in-box" type="search" size="12"></icon>
+            <input type="text" class="weui-search-bar__input" placeholder="搜索" focus="{{inputShowed}}" bindinput="inputTyping"  value="{{inputVal}}"/>
+            <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+                <icon type="clear" size="12"></icon>
+            </view>
+        </view>
+        <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput">
+            <icon class="weui-icon-search" type="search" size="12"></icon>
+            <view class="weui-search-bar__text">搜索</view>
+        </label>
+    </view>
+    <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput">取消</view>
+  </view> 
+  <view class="weui-cells searchbar-result" wx:if="{{inputVal.length > 0}}">
+    <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">
+            <view>实时搜索文本</view>
+        </view>
+    </navigator>
+    <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">
+            <view>实时搜索文本</view>
+        </view>
+    </navigator>
+    <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">
+            <view>实时搜索文本</view>
+        </view>
+    </navigator>
+    <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+        <view class="weui-cell__bd">
+            <view>实时搜索文本</view>
+        </view>
+    </navigator>
+  </view>
+  <block wx:for="{{information_list}}" wx:key="note_id">
+    <view class="information_container" bindtap="negavitorTo">
+      <view class="info_line">
+        <view class="imgContainer">
+          <image src="{{item.user.avatarUrl}}" class="avatar"></image>
+        </view>
+        <view class="info_flex_item_span">{{item.user.nickname}}</view>
+        <view class="info_flex_item"><image src="../../image/关注.png" style="width:150rpx;" mode="widthFix"></image></view>
+      </view>
+      <view class="content_line">
+         <view wx:if="{{item.photoList.length > 0}}" style="height: {{item.real_height}}px; width: {{item.photo_width}}px; margin-left: -17rpx; overflow:hidden;">
+          <swiper style='position:relative; width:100%; height:100%; overflow:hidden' indicator-dots="{{item.photoList.length>1? true : false}}">
+          <block wx:for="{{item.photoList}}" wx:for-item="photo_item">
+            <swiper-item><image src="{{photo_item.image_url}}" style="height: {{item.photo_height}}px; width:{{item.photo_width}}px; overflow: hidden;" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.pos}}"></image></swiper-item>
+          </block>
+         </swiper>
+        </view>
+        <view class="content_item">
+          <view class="desc_item">{{item.text_describe}}</view>
+          <view class="desc_item line18">{{item.zan_num}} 续秒</view>
+          <view class="time_item">剩余{{item.life}}</view>
+          <view class="pos_item">发表于{{item.post_pos}}</view>
+        </view>
+      </view>
+      <view class="interact_line">
+        <view class="interact_flex_item" catchtap="tapzan"><image src="{{item.tapZan?'../../image/发现/+1S激活.png' : '../../image/发现/+1 静态.png'}}" data-pos="{{item.pos}}"  class="icon" style="width:{{item.zanWidth}}rpx;"  ></image></view>
+        <view class="interact_flex_item"><image src="{{comment_picture}}" class="icon"></image></view>
+        <view class="interact_flex_item"><image src="{{repost_picture}}" class="icon"></image></view>
+      </view>
+    </view>
+  </block>
+  <view class="downloading" wx:if="{{down_show}}">
+    <view class="weui-loading" hidden="{{hidden}}"></view>
+    <text style="vertical-align: middle;" hidden="{{hidden}}">loading</text>
+    <icon type='success'size="20" hidden="{{!hidden}}"></icon>
+    <text style='vertical-align: middle; font-size: 30rpx; margin-left:0.5em;' hidden="{{!hidden}}">信息已全部加载完毕</text>
+  </view>

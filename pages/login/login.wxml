@@ -1,0 +1,11 @@
+<!--pages/login/login.wxml-->
+<view>
+  <!-- <image src="../../image/登陆1-01.png" style="width: 750rpx;" mode="widthFix"></image> -->
+  <view class='imgTextContainer {{finish ? "" : "imgTextContainer_origin"}}'>
+    <image src='{{user_avatar}}' style="height: 200rpx; width: 200rpx; border-radius: 50%;"></image>
+    <view><text>{{user_name}}</text></view>
+  </view>
+  <view class='description'>
+    <text class='describe {{finish ? "" : "description_origin"}}'>Welcome to Fade!</text>
+  </view>
+</view>

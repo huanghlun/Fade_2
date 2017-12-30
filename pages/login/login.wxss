@@ -1,0 +1,38 @@
+/* pages/login/login.wxss */
+page {
+  background-color: #f9f9f9;
+}
+
+.imgTextContainer {
+  text-align: center;
+  margin-top: 200rpx;
+  font-size: 28rpx;
+  transition: all 2s;
+  position: relative;
+  top: 0rpx;
+  opacity: 1;
+}
+
+.imgTextContainer_origin {
+  opacity: 0;
+  top: 100rpx;
+}
+
+.description {
+  margin-top: 2em;
+  text-align: center;
+  font-size: 34rpx;
+  overflow: hidden;
+}
+
+.describe {
+  display: inline-block;
+  overflow: hidden;
+  width: 100%; 
+  transition: all 4s;
+  white-space: nowrap;
+}
+
+.description_origin {
+  width: 0px;
+}
