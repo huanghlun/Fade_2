@@ -5,20 +5,17 @@ var app = getApp();
 Page({
   data: {
     logs: [],
-    userInfo: null,
-    fadeuserInfo: null,
+    fadeuserInfo: app.globalData.fadeuserInfo,
+    baseUrl: app.globalData.baseUrl,
     fadeID:""
   },
   onLoad: function () {
-    var user_info = app.globalData.userInfo;
-    var fade_userInfo = app.globalData.fadeuserInfo;
+    console.log(this.data.fadeuserInfo);
     var openID = wx.getStorageSync('user_openid');
     this.setData({
-      userInfo: user_info,
-      fadeuserInfo: fade_userInfo,
-      fadeID: openID
+      fadeID: openID,
+      fadeuserInfo: app.globalData.fadeuserInfo
     })
-    console.log(this.data.userInfo.avatarUrl);
   },
   tapSelf: function() {
     wx.navigateTo({

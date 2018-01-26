@@ -1,9 +1,9 @@
 <!--logs.wxml-->
 <view class="container">
     <navigator class="img_name_container" url='../self/self'>
-      <image class="log_avatar" src="{{userInfo.avatarUrl}}"></image>
+      <image class="log_avatar" src="{{baseUrl + fadeuserInfo.head_image_url}}"></image>
       <view class="log_name_qianming">
-        <text class="nickname">{{userInfo.nickName}}</text>
+        <text class="nickname">{{fadeuserInfo.nickname}}</text>
         <text class="qianming">个性签名: <text wx:if="{{fadeuserInfo.summary !== undefined}}">{{fadeuserInfo.summary}}</text></text>
       </view>
       <view class="img_name_ft"></view>

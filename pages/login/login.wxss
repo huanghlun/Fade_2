@@ -1,12 +1,12 @@
 /* pages/login/login.wxss */
 page {
-  background-color: #f9f9f9;
+  /* background-color: #f9f9f9; */
 }
 
 .imgTextContainer {
   text-align: center;
   margin-top: 200rpx;
-  font-size: 28rpx;
+  font-size: 32rpx;
   transition: all 2s;
   position: relative;
   top: 0rpx;
@@ -21,7 +21,7 @@ page {
 .description {
   margin-top: 2em;
   text-align: center;
-  font-size: 34rpx;
+  font-size: 36rpx;
   overflow: hidden;
 }
 

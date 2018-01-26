@@ -40,11 +40,11 @@
 
 .setting_cell_ft::after {
   vertical-align: middle;
-  margin-left: 10px;
+  margin-left: 20rpx;
   content: " ";
-  height: 7px;
-  width: 7px;
-  border-width: 2px 2px 0px 0px;
+  height: 14rpx;
+  width: 14rpx;
+  border-width: 4rpx 4rpx 0px 0px;
   border-color: #c8c8cd;
   border-style: solid;
   transform: matrix(.71, .71, -.71, .71, 0, 0);

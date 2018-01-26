@@ -1,7 +1,10 @@
 //app.js
 App({
   onLaunch: function() {
-    //获取用户信息
+    //获取系统、用户信息
+    var system_res = wx.getSystemInfoSync();
+    this.globalData.windowHeight = system_res.windowHeight;
+    this.globalData.windowWidth = system_res.windowWidth;
   },
   getUserInfo: function(cb) {
     var that = this
@@ -23,8 +26,12 @@ App({
   },
 
   globalData: {
-    userInfo: null,
     fadeuserInfo: null,
-    detail_information: null
+    detail_item: null,
+    detail_item_index: -1,
+    baseUrl: "https://sysufade.cn/fade_pro/",
+    tokenModal:null,
+    windowHeight: 0,
+    windowWidth: 0
   }
 })

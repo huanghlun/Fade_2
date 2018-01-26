@@ -6,7 +6,7 @@ page{
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 20rpx 0rpx 0rpx 0rpx;
+  padding: 20rpx 0rpx 0px 0px;
   background-color: #fff;
 }
 
@@ -46,7 +46,7 @@ page{
   content: " ";
   height: 30rpx;
   width: 30rpx;
-  border-width: 4rpx 4rpx 0rpx 0rpx;
+  border-width: 4rpx 4rpx 0px 0px;
   border-color: #c8c8cd;
   border-style: solid;
   transform: matrix(.71, .71, -.71, .71, 0, 0);

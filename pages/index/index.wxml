@@ -1,53 +1,65 @@
 <!--index.wxml-->
-  <view class="{{uphidden? 'uploading_container' : 'uploading_show'}}"> 
+  <view class="{{uphidden? 'uploading_container' : 'uploading_show'}}" style="display:none;"> 
     <view class="uploading {{uphidden?'uploading_translate':''}}">
       <view class="firstPoint"></view>
       <view class="secondPoint"></view>
       <view class="thirdPoint"></view>
     </view>
   </view>
-  <block wx:for="{{information_list}}" wx:key="user.note_id">
-    <view class="information_container" bindtap="negavitorTo" data-pos="{{item.pos}}">
+  
+  <block wx:for="{{information_list}}" wx:key="note_id">
+    <view class="information_container {{item.is_die == 0 ? 'die_container' : ''}}" animation="{{item.is_die == 0 ? animationData : null}}" bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}">
       <view class="info_line">
         <view class="imgContainer">
-          <image src="{{item.user.avatarUrl}}" class="avatar"></image>
+          <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
         </view>
-        <view class="info_flex_item_span">{{item.user.nickname}}</view>
+        <view class='info_flex_item info_name'>{{item.nickname}}</view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+        <view class='info_flex_item_span'>
+          <image src='../../image/icon/加.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+          <image src='../../image/icon/减.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+        </view>
+        <view class='flex-none'>
+          <image src='../../image/icon/三个点.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
+        </view>
       </view>
-      <view class="content_line">
-         <view wx:if="{{item.photoList.length > 0}}" style="height: {{item.real_height}}px; width: {{item.photo_width}}px; margin-left: -17rpx; overflow:hidden;">
-         <swiper style='position:relative; width:100%; height:100%; overflow:hidden' indicator-dots="{{item.photoList.length>1? true : false}}">
-          <block wx:for="{{item.photoList}}" wx:for-item="photo_item">
-            <swiper-item><image src="{{photo_item.image_url}}" style="height: {{item.photo_height}}px; width:{{item.photo_width}}px; overflow: hidden;" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.pos}}"></image></swiper-item>
-          </block>
-         </swiper>
-        </view>
+       <view class="content_line">
+        <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
+          <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
+            <swiper-item wx:for="{{item.images}}" wx:for-item="img_item" wx:key="{{image_id}}">
+              <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.note_id}}"></image>
+            </swiper-item>
+         </swiper> 
+        </view>  
         <view class="content_item">
-          <view class="desc_item">{{item.text_describe}}
-            <label wx:for='{{item.other_repost}}' wx:for-item="i">
-              <span class="author_item">//@{{i.nickname}}：</span>
-              <span>{{i.note_content}}</span>
-            </label>
+          <view class="orgin_item">
+             <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+             <view>{{item.note_content || item.origin.note_content}}</view> 
           </view>
-          <view class="orgin_item" wx:if="{{item.isRelay != 0}}">
-             <view class="author_item">@{{item.origin_note.nickname}}</view>
-             <view>{{item.origin_note.note_content}}</view> 
-          </view>
-          <view class="desc_item line18">{{item.zan_num}} 续秒</view>
-          <view class="time_item">剩余{{item.life}}</view>
-          <view class="pos_item">发表于{{item.post_pos}}</view>
+          <view class="pos_item">广州·大学城</view>
+          <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
         </view>
       </view>
-      <view class="interact_line">
-        <view class="interact_flex_item" catchtap="tapzan"><image src="{{item.tapZan?'../../image/发现/+1S激活.png' : '../../image/发现/+1 静态.png'}}" data-pos="{{item.pos}}"  class="icon" style="width:{{item.zanWidth}}rpx;"  ></image></view>
-        <view class="interact_flex_item"><image src="{{comment_picture}}" class="icon"></image></view>
-        <view class="interact_flex_item"><image src="{{repost_picture}}" class="icon"></image></view>
+      <view class="interact_line" style='width: {{item.progress_len}}rpx'>
+        <view class='rest_time'>剩余{{item.life}}</view>
+        <image src='../../image/icon/长进度条.png' style='width:100%; height:50rpx'></image>  
+        <view class='button_container'>
+          <image src='../../image/icon/短进度条按钮.png' style='width:100%; height:100%;'></image>
+          <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
+            <view class='xumiao_btn' catchtap='changeSecond' data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">+1S</view>
+            <view class='xumiao_btn' catchtap='changeSecond' data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">-1S</view>
+            <view class='comment_btn' wx:if="{{item.action != 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
+              评论
+              <image src='../../image/icon/加.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
+              <image src='../../image/icon/减.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
   </block>
   <view class="downloading" wx:if="{{down_show}}">
-    <view class="weui-loading" hidden="{{hidden}}"></view>
-    <text style="vertical-align: middle;" hidden="{{hidden}}">loading</text>
-    <icon type='success'size="20" hidden="{{!hidden}}"></icon>
-    <text style='vertical-align: middle; font-size: 30rpx; margin-left:0.5em;' hidden="{{!hidden}}">信息已全部加载完毕</text>
+    <view class="weui-loading"></view>
+    <text style="vertical-align: middle;">loading</text>
   </view>

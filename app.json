@@ -1,15 +1,17 @@
 {
   "pages":[
+    "pages/post/post",
     "pages/login/login",
     "pages/index/index",
-    "pages/discover/discover",
+    "pages/notice/notice",
     "pages/logs/logs",
     "pages/self/self",
-    "pages/detail/detail"
+    "pages/detail/detail",
+    "pages/temp/temp"
   ],
   "window":{
     "backgroundTextStyle":"dark",
-    "navigationBarBackgroundColor": "#f9f9f9",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Fade",
     "navigationBarTextStyle":"black",
     "enablePullDownRefresh" : true
@@ -17,22 +19,32 @@
   "tabBar":{
     "selectedColor": "#29abe2",
     "color": "#000000",
-    "backgroundColor": "#f9f9f9",
+    "backgroundColor": "#fff",
     "list":[
       {
         "pagePath": "pages/index/index",
-        "iconPath": "image/icon/首页静态.png",
-        "selectedIconPath": "image/icon/首页激活.png"
+        "iconPath": "image/icon/主页_origin.png",
+        "selectedIconPath": "image/icon/主页.png"
       },
       {
-        "pagePath":"pages/discover/discover",
-        "iconPath": "image/icon/发现静态.png",
-        "selectedIconPath": "image/icon/发现激活.png"
+        "pagePath":"pages/notice/notice",
+        "iconPath": "image/icon/消息_origin.png",
+        "selectedIconPath": "image/icon/消息.png"
       },
       {
-        "pagePath":"pages/logs/logs",
-        "iconPath": "image/icon/我的静态.png",
-        "selectedIconPath": "image/icon/我的激活.png"
+        "pagePath":"pages/temp/temp",
+        "iconPath": "image/icon/发布_origin.png",
+        "selectedIconPath": "image/icon/发布.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "iconPath": "image/icon/搜索_origin.png",
+        "selectedIconPath": "image/icon/搜索.png"
+      },
+      {
+        "pagePath": "pages/logs/logs",
+        "iconPath": "image/icon/个人_origin.png",
+        "selectedIconPath": "image/icon/个人.png"
       }
     ]
   }

@@ -1,33 +1,124 @@
 /* pages/detail/detail.wxss */
-.hot_comment_container {
-  margin-top: 17rpx;
+.xumiao_line {
+  overflow: hidden;
+  margin-bottom: 10rpx;
 }
 
-.comment_hd, .comment_line {
-  padding-left: 17rpx;
+.xumiao_avatar_container {
+  /* width: 52rpx;
+  height: 52rpx; */
+  width: 54rpx;
+  height: 54rpx;
+  position: relative;
+  display: inline-block;
+  margin-right: 10rpx;
+}
+
+.xumiao_avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.xumiao_state {
+  position: absolute;
+  width: 22rpx;
+  height: 22rpx;
+  bottom: 0px;
+  right: 0px;
+  margin-right: -5rpx;
+}
+
+.xumiao_line_ft {
+  width: 100rpx;
+  margin: 8rpx 0px;
+  float: right;
+  color: rgb(136, 136, 136);
+  padding-left: 0.5em;
+  font-size:25rpx; 
+  border-radius: 26rpx 0rpx 0rpx 26rpx;
+  box-shadow: -1px 1px 4px rgba(0, 0, 0, 0.1), -1px -1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment_container {
+  margin-top: 0px;
+  line-height: 1.2em;
 }
 
 .comment_hd {
-  margin-top: 35rpx;
-  font-size:  28rpx;
-  color: #4f4f4f;
+  padding: 5rpx 33.33rpx;
+  /* font-size: 29.16rpx; */
+  line-height: 1.6em;
+  font-size: 32rpx;
+  border-top: 2rpx rgba(200, 200, 200, 0.5) solid;
+  border-bottom: 2rpx rgba(200, 200, 200, 0.5) solid;
 }
 
 .comment_avatar {
-  height: 50rpx;
-  width: 50rpx;
+  /* height: 50rpx;
+  width: 50rpx; */
+  width: 54rpx;
+  height: 54rpx;
 }
 
 .comment_time {
   padding-right: 40rpx;
-  font-size: 24rpx;
-}
-
-.info_flex_item text {
-  font-size: 24rpx;
+  /* font-size: 24rpx; */
+  font-size: 27rpx;
 }
 
 .comment_line {
-  padding-right: 39rpx;
-  font-size: 27rpx;
+  padding: 16.67rpx 33.33rpx;
+  border-bottom: 2rpx rgba(200, 200, 200, 0.2) solid;
+}
+
+.comment_line:last-of-type {
+  border-bottom-style: none;
+}
+
+.comment_line_hd {
+  /* font-size: 25rpx; */
+  font-size: 28rpx;
+}
+
+.comment_state {
+  width: 24rpx;
+  height: 24rpx;
+}
+
+.comment_user_name, .comment_time {
+  margin-left: 18.75rpx;
+}
+
+.comment_user_name {
+  font-weight: bold;
+}
+
+.comment_time {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.comment_line_content {
+  /* margin-left: 111.52rpx; */
+  /* font-size: 25rpx; */
+  margin-left: 115.52rpx;
+  font-size: 28rpx;
+}
+
+.comment_reply {
+  margin-top: 10rpx;
+  padding-left: 30rpx;
+  border-left: 2rpx solid rgba(200, 200, 200, 0.5);
+}
+
+.reply {
+  color: rgba(0, 0, 0, 0.5);
+  margin: 0 0.5em;
+}
+
+.comment_reply_more {
+  color: rgba(0, 0, 0, 0.5);
+  margin-top: 10rpx;
+  /* font-size: 25rpx; */
+  font-size: 28rpx;
 }

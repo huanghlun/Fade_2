@@ -10,49 +10,57 @@ Page({
   },
   onLoad: function () {
     var that = this;
+    //获取屏幕信息
     if (app.globalData.fadeuserInfo == null) {
       wx.login({
         success: function (res) {
           wx.getUserInfo({
             withCredentials: true,
             success: function (res_1) {
-              app.globalData.userInfo = res_1.userInfo;
+              app.globalData.fadeuserInfo = res_1.userInfo;
               that.setData({
                 user_name: res_1.userInfo.nickName,
                 user_avatar: res_1.userInfo.avatarUrl,
                 finish: true
               })
               var openID = wx.getStorageSync("user_openid");
+              console.log(openID);
               //openID为空证明用户还未注册
               if (openID == "") {
                 var user = res_1.userInfo;
                 var Gender = user.gender ? "男" : "女";
                 wx.request({
-                  url: "https://sysufade.cn/fade/user",
+                  url: app.globalData.baseUrl+"registerWechat",
+                  header: {
+                    "Content-type": "application/x-www-form-urlencoded"
+                  },
                   data: {
                     js_code: res.code,
-                    code: "02",
-                    nickname: user.nickName,
-                    head_image_url: user.avatarUrl,
-                    sex: Gender
+                    user: JSON.stringify({
+                      nickname: user.nickName,
+                      head_image_url: user.avatarUrl,
+                      sex: Gender
+                    })
                   },
-                  method: "GET",
+                  method: "POST",
                   success: function (res1) {
-                    console.log("注册成功");
-                    if(res1.data.err == '用户不存在') {
+                    console.log("注册登录成功");
+                    if(res1.data.err != undefined) {
                       wx.showModal({
-                        title: '用户注册失败',
+                        title: '用户注册登录失败',
                         content: '请重试登录连接数据库',
                       })
                     }
                     else {
-                      wx.setStorageSync("user_openid", res1.data.wechat_id);
-                      app.globalData.fadeuserInfo = res1.data;
+                      console.log(res1)
+                      wx.setStorageSync("user_openid", res1.data.user.wechat_id);
+                      app.globalData.fadeuserInfo = res1.data.user;
+                      app.globalData.tokenModal = res1.data.user.tokenModal;
                       setTimeout(function(){
                         wx.switchTab({
                           url: '../index/index'
                         })  
-                      }, 2000);  
+                      }, 1500);  
                     }
                   },
                   fail: function () {
@@ -62,30 +70,26 @@ Page({
               }
               //已注册用户则加载得到粉丝数、点赞信息之类
               else {
-                var wechat_id_ = wx.getStorageSync("user_openid");
                 wx.request({
-                  url: "https://sysufade.cn/fade/user",
-                  data: {
-                    code: "01",
-                    wechat_id: wechat_id_
-                  },
+                  url: app.globalData.baseUrl+"loginWechat/"+openID,
                   method: "GET",
                   success: function (res1) {
-                    console.log(res1.data);
-                    if (res1.data.err == '用户不存在') {
+                    console.log(res1.data.user);
+                    if (res1.data.err != undefined) {
                       wx.showModal({
-                        title: '数据库连接失败',
-                        content: '请重试登录连接数据库',
+                        title: '登录失败',
+                        content: '请重试登录',
                       })
                     }
                     else {
-                      app.globalData.fadeuserInfo = res1.data;
+                      app.globalData.fadeuserInfo = res1.data.user;
+                      app.globalData.tokenModal = res1.data.tokenModal;
                       // console.log(app.globalData.fadeuserInfo);
                       setTimeout(function () {
                         wx.switchTab({
                           url: '../index/index'
                         })
-                      }, 2000);  
+                      }, 1500);  
                     }                 
                   },
                   fail: function () {
@@ -110,7 +114,7 @@ Page({
         }
       })
     }
-    else {
+    else { //直接跳转
       wx.switchTab({
         url: '../index/index'
       }) 

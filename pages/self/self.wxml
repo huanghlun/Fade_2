@@ -2,7 +2,7 @@
 <view class="setting">
   <navigator class="setting_items" url="">
     <view class="setting_hd">头像</view>
-    <view class="setting_content"><image class="log_avatar" src="{{fadeuserInfo.head_image_url}}"></image></view>
+    <view class="setting_content"><image class="log_avatar" src="{{baseUrl + fadeuserInfo.head_image_url}}"></image></view>
     <view class="setting_cell_ft"></view>
   </navigator>
   <navigator class="setting_items" url="">

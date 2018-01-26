@@ -1,0 +1,12 @@
+/* pages/post/post.wxss */
+.post_img_container {
+  width: 750rpx;
+}
+
+textarea {
+  font-size: 32rpx;
+  line-height: 1.4em;
+  padding: 0 0.5em 0.2em;
+  width: 750rpx;
+  border-bottom: 2rpx solid rgba(200, 200, 200, 0.2);
+}
