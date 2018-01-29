@@ -17,11 +17,11 @@
         <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
         <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
         <view class='info_flex_item_span'>
-          <image src='../../image/icon/加.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
-          <image src='../../image/icon/减.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+          <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+          <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
         </view>
         <view class='flex-none'>
-          <image src='../../image/icon/三个点.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
+          <image src='../../image/icon/ellipse.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
         </view>
       </view>
        <view class="content_line">
@@ -43,16 +43,16 @@
       </view>
       <view class="interact_line" style='width: {{item.progress_len}}rpx'>
         <view class='rest_time'>剩余{{item.life}}</view>
-        <image src='../../image/icon/长进度条.png' style='width:100%; height:50rpx'></image>  
+        <image src='../../image/icon/long.png' style='width:100%; height:50rpx'></image>  
         <view class='button_container'>
-          <image src='../../image/icon/短进度条按钮.png' style='width:100%; height:100%;'></image>
+          <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
           <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
             <view class='xumiao_btn' catchtap='changeSecond' data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">+1S</view>
             <view class='xumiao_btn' catchtap='changeSecond' data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">-1S</view>
             <view class='comment_btn' wx:if="{{item.action != 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
               评论
-              <image src='../../image/icon/加.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
-              <image src='../../image/icon/减.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
+              <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
+              <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
             </view>
           </view>
         </view>

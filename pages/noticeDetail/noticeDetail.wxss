@@ -1,0 +1,64 @@
+/* pages/noticeDetail/noticeDetail.wxss */
+.avatar {
+  width: 70rpx;
+  height: 70rpx;
+}
+
+.notice_item {
+  padding: 14rpx 0px;
+  margin: 0px 20rpx;
+  border-bottom: 2rpx rgba(200,200,200,0.3) solid;
+}
+
+.comment_time {
+  padding-right: 20rpx;
+  /* font-size: 24rpx; */
+  font-size: 28rpx;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.item_img_container {
+  overflow: hidden;
+  width: 60rpx;
+  height: 60rpx;
+  background-color: rgb(242, 242, 242);
+  text-align: center;
+}
+
+.item_img {
+  width: 60rpx;
+  height: 60rpx;
+}
+
+.item_text {
+  line-height: 60rpx;
+  color: rgb(117, 117, 117);
+}
+
+.concern_btn {
+  font-size: 28rpx;
+  text-align: center;
+  width: 104rpx;
+  border-radius: 4rpx;
+  border: rgb(41, 171, 226) solid 2rpx;
+   /* background-color: rgb(41, 171, 226);  */
+   /* background-color: white;  */
+}
+
+.item_content {
+  font-size: 30rpx;
+  line-height: 1.2em;
+  padding: 0 60rpx 0 88.75rpx;
+  word-break:break-all;
+  display:-webkit-box;
+  -webkit-line-clamp:5;
+  -webkit-box-orient:vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.option_line {
+  padding-left: 88.75rpx;
+  margin-top: 0.4em;
+}
+

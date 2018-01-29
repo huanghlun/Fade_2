@@ -1,20 +1,20 @@
 <!--pages/detail/detail.wxml-->
 <scroll-view class="information_container" data-pos="{{item.note_id}}" data-img="{{item.images}}" style='height: {{windowHeight}}px' lower-threshold="1" scroll-top="{{scrollTop}}" scroll-into-view="{{scrollIntoView}}" enable-back-to-top="true" scroll-y="true" bindscrolltolower="scrollToLow">
-  <view class="info_line">
-    <view class="imgContainer">
+   <view class="info_line">
+     <view class="imgContainer">
       <image src="{{baseUrl+item.head_image_url}}" class="avatar"></image>
-    </view>
+    </view> 
     <view class='info_flex_item info_name'>{{item.nickname}}</view>
     <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
     <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
     <view class='info_flex_item_span'>
-      <image src='../../image/icon/加.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
-      <image src='../../image/icon/减.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+      <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+      <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
     </view>
     <view class='flex-none'>
-      <image src='../../image/icon/三个点.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
+      <image src='../../image/icon/ellipse.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
     </view>
-  </view>
+  </view> 
   <view class="content_line">
     <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
       <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
@@ -34,17 +34,17 @@
   </view>
   <view class="interact_line" style='width: {{item.progress_len}}rpx'>
     <view class='rest_time'>剩余{{item.life}}</view>
-    <image src='../../image/icon/长进度条.png' style='width:100%; height:50rpx'></image>  
+    <image src='../../image/icon/long.png' style='width:100%; height:50rpx'></image>  
     <view class='button_container'>
-      <image src='../../image/icon/短进度条按钮.png' style='width:100%; height:100%;'></image>
+      <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
       <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
         <view class='xumiao_btn' catchtap='changeSecond' data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">+1S</view>
         <view class='xumiao_btn' catchtap='changeSecond' data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">-1S</view>
 
         <view class='comment_btn' wx:if="{{item.action != 0}}" catchtap='addComment' data-type="first">
           评论
-          <image src='../../image/icon/加.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
-          <image src='../../image/icon/减.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
+          <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
+          <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
         </view>
       </view>
     </view>
@@ -52,18 +52,18 @@
   <view class='xumiao_line'>
     <view wx:for="{{item.xumiao_list}}" wx:for-item="xumiao_item" wx:key="user_id" class='xumiao_avatar_container'>
       <image src='{{baseUrl + xumiao_item.head_image_url}}' class='xumiao_avatar'></image>
-      <image src='../../image/icon/加.png' class='xumiao_state' wx:if="{{xumiao_item.type == 1}}"></image>
-      <image src='../../image/icon/减.png' class='xumiao_state' wx:if="{{xumiao_item.type == 2}}"></image>
+      <image src='../../image/icon/add.png' class='xumiao_state' wx:if="{{xumiao_item.type == 1}}"></image>
+      <image src='../../image/icon/sub.png' class='xumiao_state' wx:if="{{xumiao_item.type == 2}}"></image>
     </view>
     <view class='xumiao_line_ft'>More</view>
   </view>
   <view class="comment_container">
     <view class='comment_hd' id='comment_0'>评论 {{item.comment_num}}</view>
     <block wx:for="{{item.comment_list}}" wx:for-item="comment_item" wx:key="comment_id">
-      <navigator url='' class="comment_line" bindtap='addComment' id='comment_{{comment_item.comment_id}}' data-pos='{{comment_item.comment_id}}' data-type="second" data-item="{{comment_item}}">
+      <view url='' class="comment_line" bindtap='addComment' id='comment_{{comment_item.comment_id}}' data-pos='{{comment_item.comment_id}}' data-type="second" data-item="{{comment_item}}">
         <view class="comment_line_hd flex flex-align-center">
-          <image class='comment_state flex-none' src='../../image/icon/减.png' wx:if="{{comment_item.type==2}}"></image>
-          <image class='comment_state flex-none' src='../../image/icon/加.png' wx:if="{{comment_item.type==1}}"></image>
+          <image class='comment_state flex-none' src='../../image/icon/sub.png' wx:if="{{comment_item.type==2}}"></image>
+          <image class='comment_state flex-none' src='../../image/icon/add.png' wx:if="{{comment_item.type==1}}"></image>
           <view class="imgContainer flex-none" style='margin-left: 18.75rpx;'>
             <image src="{{baseUrl + comment_item.head_image_url}}" class="avatar comment_avatar"></image>
           </view>
@@ -74,12 +74,12 @@
           {{comment_item.comment_content}}
           <view class='comment_reply' wx:if="{{comment_item.comments.length > 0}}">
             <block wx:for="{{comment_item.comments}}" wx:for-item="comment_reply" wx:key="second_id">
-              <navigator url='' class='comment_reply_item' catchtap='addComment' id='comment_second_{{comment_reply.second_id}}' data-pos='{{comment_reply.second_id}}' data-item="{{comment_reply}}" data-type="second_reply" data-nickname="{{comment_reply.nickname}}">
+              <navigator url='' hover-stay-time="200" class='comment_reply_item' catchtap='addComment' id='comment_second_{{comment_reply.second_id}}' data-pos='{{comment_reply.second_id}}' data-item="{{comment_reply}}" data-type="second_reply" data-nickname="{{comment_reply.nickname}}">
                 <view class="comment_line_hd flex flex-align-center">
                   <view class="comment_user_name flex-none" style='margin-left: 0px;'>
                     {{comment_reply.nickname}}<text class='reply' wx:if="{{comment_reply.to_nickname}}">回复</text><text wx:if="{{comment_reply.to_nickname}}">{{comment_reply.to_nickname}}</text>
                   </view>
-                  <view class="comment_time comment_time flex-1">{{comment_reply.comment_time}}</view>
+                  <view class="comment_time flex-1">{{comment_reply.comment_time}}</view>
                 </view>
                 <view class='comment_reply_content'>
                   {{comment_reply.comment_content}}
@@ -89,7 +89,7 @@
           </view>
           <view class='comment_reply_more' wx:if="{{comment_item.comments.length>5}}">查看更多</view>
         </view>
-      </navigator>
+      </view>
     </block>
   </view>
 </scroll-view>

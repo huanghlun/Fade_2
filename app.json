@@ -1,12 +1,13 @@
 {
   "pages":[
-    "pages/post/post",
     "pages/login/login",
     "pages/index/index",
     "pages/notice/notice",
+    "pages/noticeDetail/noticeDetail",
     "pages/logs/logs",
     "pages/self/self",
     "pages/detail/detail",
+    "pages/post/post",
     "pages/temp/temp"
   ],
   "window":{
@@ -23,28 +24,28 @@
     "list":[
       {
         "pagePath": "pages/index/index",
-        "iconPath": "image/icon/主页_origin.png",
-        "selectedIconPath": "image/icon/主页.png"
+        "iconPath": "image/icon/index_origin.png",
+        "selectedIconPath": "image/icon/index.png"
       },
       {
         "pagePath":"pages/notice/notice",
-        "iconPath": "image/icon/消息_origin.png",
-        "selectedIconPath": "image/icon/消息.png"
+        "iconPath": "image/icon/notice_origin.png",
+        "selectedIconPath": "image/icon/notice.png"
       },
       {
         "pagePath":"pages/temp/temp",
-        "iconPath": "image/icon/发布_origin.png",
-        "selectedIconPath": "image/icon/发布.png"
+        "iconPath": "image/icon/post_origin.png",
+        "selectedIconPath": "image/icon/post.png"
       },
       {
         "pagePath": "pages/logs/logs",
-        "iconPath": "image/icon/搜索_origin.png",
-        "selectedIconPath": "image/icon/搜索.png"
+        "iconPath": "image/icon/search_origin.png",
+        "selectedIconPath": "image/icon/search.png"
       },
       {
         "pagePath": "pages/logs/logs",
-        "iconPath": "image/icon/个人_origin.png",
-        "selectedIconPath": "image/icon/个人.png"
+        "iconPath": "image/icon/own_origin.png",
+        "selectedIconPath": "image/icon/own.png"
       }
     ]
   }

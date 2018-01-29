@@ -1,4 +1,6 @@
 // pages/temp/temp.js
+var app = getApp();
+
 Page({
 
   /**
@@ -13,21 +15,37 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.data.showSheet = true;
+    
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-    
+    wx.showActionSheet({
+      itemList: ['发布自己的想法'],
+      success: function (res) {
+        if (res.tapIndex != undefined) {
+          console.log(res.tapIndex);
+          wx.navigateTo({
+            url: '../post/post'
+          })
+        }
+      },
+      fail: function (res) {
+        console.log(res.errMsg)
+        wx.switchTab({
+          url: '../index/index'
+        })
+      }
+    })
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    if(this.data.showSheet) {
+    if (!app.globalData.post_finish) {
       wx.showActionSheet({
         itemList: ['发布自己的想法'],
         success: function (res) {
@@ -45,6 +63,12 @@ Page({
           })
         }
       })
+    } else {
+      app.globalData.post_finish = false;
+      var pages = getCurrentPages();
+      wx.switchTab({
+        url: '../index/index',
+      })
     }
   },
 
@@ -59,27 +83,6 @@ Page({
    * 生命周期函数--监听页面卸载
    */
   onUnload: function () {
-  
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-  
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-  
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
   
   }
 })

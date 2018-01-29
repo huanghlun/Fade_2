@@ -21,21 +21,21 @@ function formatNumber(n) {
 }
 
 //添加新帖子
-function addInformation(a, array, that, mark) {
+function addInformation(a, array, information_list, windowWidth, mark) {
   var temp = array[a];
   var time_life;
   if(temp.type != 0) {
-    time_life = calLeftTime(temp.origin.add_num, temp.origin.sub_num, temp.origin.post_time, temp.origin.fetchTime);
+    time_life = calLeftTime(temp.origin.add_num, temp.origin.sub_num, temp.origin.post_time, temp.origin.fetchTime || new Date());
     temp.images = temp.origin.images;
   } else {
-    time_life = calLeftTime(temp.add_num, temp.sub_num, temp.post_time, temp.fetchTime);
+    time_life = calLeftTime(temp.add_num, temp.sub_num, temp.post_time, temp.fetchTime || new Date());
   }
   temp.life = time_life.life_str;
   temp.progress_len = time_life.progress_len;
   if (temp.images != undefined && temp.images.length > 0) {
-    temp.show_width = that.data.windowWidth;
+    temp.show_width = windowWidth;
     if(temp.images[0].image_cut_size == 1) { //长图(即小于15:8)，以4:5进行裁剪
-      temp.show_height = parseFloat(that.data.windowWidth * 1.25);
+      temp.show_height = parseFloat(windowWidth * 1.25);
     } else { //宽图
       temp.show_height = parseFloat(temp.show_width * 8 / 15);
     }
@@ -64,9 +64,9 @@ function addInformation(a, array, that, mark) {
     }
   }
   if(mark == "push")
-    that.data.information_list.push(temp);
+    information_list.push(temp);
   else 
-    that.data.information_list.unshift(temp);
+    information_list.unshift(temp);
 }
 
 //更新帖子
@@ -165,12 +165,25 @@ function calLeftTime(add_num, sub_num, time, cur_time){
   var time_ = parseFloat(add_num * 300 - sub_num * 60 + 3600 - (cur_time - date.getTime()) / 1000);
   var time_obj = caltime(time_);
   var progress_len = calProgressLen(time_);
-  var life_str = "";
-  if (time_obj.day != 0) life_str += time_obj.day + "天";
-  if (time_obj.hour != 0) life_str += time_obj.hour + ":";
-  if (time_obj.minute != 0) life_str += time_obj.minute + ":";
+  var life_str = "", carry = 0;
+  if (time_obj.day != 0) {
+    life_str += time_obj.day + "天";
+    carry = 1;
+  }
+  if (time_obj.hour != 0) {
+    life_str += time_obj.hour + ":";
+    carry = 1;
+  } else if (time_obj.hour == 0 && carry == 1) life_str += "00:";
+  
+  if (time_obj.minute != 0) {
+    life_str += time_obj.minute + ":";
+    carry = 1;
+  } else if (time_obj.minute == 0 && carry == 1) life_str += "00:";
+
   if (time_obj.second != 0) life_str += time_obj.second;
-  if (time_obj.second == 0) life_str += "00";
+  else if (time_obj.second == 0) life_str += "00";
+
+  if (carry == 0) life_str += "秒"
   return {
     "progress_len" : progress_len,
     "life_str" : life_str
@@ -223,6 +236,18 @@ function noteIfDie(that) {
   }).exec()
 }
 
+//数组相减
+function cutArray(arr1, arr2) { //arr2被减
+  for (var i = arr1.length - 1; i >= 0; i--) {
+    for (var j = arr2.length - 1; j >= 0; j--) {
+      if (arr1[i] == arr2[j]) {
+        arr2.splice(j, 1);
+        break;
+      }
+    }
+  }
+}
+
 module.exports = {
   formatTime: formatTime,
   CalPhotoHeight: CalPhotoHeight,
@@ -233,5 +258,6 @@ module.exports = {
   json2Form: json2Form,
   noteIfDie: noteIfDie,
   advanceDay: advanceDay,
-  formatDate: formatDate
+  formatDate: formatDate,
+  cutArray: cutArray
 }

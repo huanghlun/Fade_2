@@ -1,25 +1,91 @@
 <!--logs.wxml-->
-<view class="container">
-    <navigator class="img_name_container" url='../self/self'>
-      <image class="log_avatar" src="{{baseUrl + fadeuserInfo.head_image_url}}"></image>
-      <view class="log_name_qianming">
-        <text class="nickname">{{fadeuserInfo.nickname}}</text>
-        <text class="qianming">个性签名: <text wx:if="{{fadeuserInfo.summary !== undefined}}">{{fadeuserInfo.summary}}</text></text>
+<navigator url='../self/self' hover-stay-time='200'>
+  <view class="img_name_container">
+    <image class="log_avatar" src="{{baseUrl + fadeuserInfo.head_image_url}}"></image>
+    <view class="log_name_qianming">
+      <text class="nickname">{{fadeuserInfo.nickname}}</text>
+      <text class='fadename'>{{fadeuserInfo.fade_name}}</text>
+      <!-- <view class='concern_btn flex-none' style="background-color : {{fans_item.isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}">
+        <text style='color:white;' wx:if="{{fans_item.isConcern == 0}}">关注</text>  
+        <text style='color:rgb(41, 171, 226);' wx:if="{{fans_item.isConcern == 1}}">已关注</text>  
+      </view> -->
+    </view>
+  </view>
+  <view class="qianming">
+    <text>{{fadeuserInfo.summary || "（无个性签名）"}}</text>
+  </view>
+  <view class="school" wx:if="{{fadeuserInfo.school_name}}">
+    <image src='../../image/icon/school.png' mode='widthFix' class='school_image'></image>
+    <text>{{fadeuserInfo.school_name}}</text>
+  </view>
+</navigator>
+<view class="fans_line">
+  <view class="fans_line_item">
+    <view class="fans_item_ct">3</view>
+    <view class="fans_item_hd">动态</view>
+  </view>
+  <view class="fans_line_item fans_line_item_selected">
+    <view class="fans_item_ct">{{fadeuserInfo.fade_num}}</view>
+    <view class="fans_item_hd">FADE</view>
+  </view>
+  <view class="fans_line_item">
+    <view class="fans_item_ct">{{fadeuserInfo.fans_num}}</view>
+    <view class="fans_item_hd">粉丝</view>
+  </view>
+  <view class="fans_line_item">
+    <view class="fans_item_ct">{{fadeuserInfo.concern_num}}</view>
+    <view class="fans_item_hd">关注</view>
+  </view>
+</view>
+<block wx:for="{{fade_list}}" wx:key="note_id">
+    <view class="information_container {{item.is_die == 0 ? 'die_container' : ''}}" animation="{{item.is_die == 0 ? animationData : null}}" bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}">
+      <view class="info_line">
+        <view class="imgContainer">
+          <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
+        </view>
+        <view class='info_flex_item info_name'>{{item.nickname}}</view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+        <view class='info_flex_item_span'>
+          <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+          <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+        </view>
+        <view class='flex-none'>
+          <image src='../../image/icon/ellipse.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
+        </view>
       </view>
-      <view class="img_name_ft"></view>
-    </navigator>
-    <view class="fans_line">
-      <view class="fans_line_item">
-        <view class="fans_item_ct">0</view>
-        <view class="fans_item_hd">FADE</view>
+       <view class="content_line">
+        <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
+          <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
+            <swiper-item wx:for="{{item.images}}" wx:for-item="img_item" wx:key="{{image_id}}">
+              <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.note_id}}"></image>
+            </swiper-item>
+         </swiper> 
+        </view>  
+        <view class="content_item">
+          <view class="orgin_item">
+             <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+             <view>{{item.note_content || item.origin.note_content}}</view> 
+          </view>
+          <view class="pos_item">广州·大学城</view>
+          <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
+        </view>
       </view>
-      <view class="fans_line_item">
-        <view class="fans_item_ct">{{fadeuserInfo.concern_num}}</view>
-        <view class="fans_item_hd">关注</view>
-      </view>
-      <view class="fans_line_item">
-        <view class="fans_item_ct">{{fadeuserInfo.fans_num}}</view>
-        <view class="fans_item_hd">粉丝</view>
+      <view class="interact_line" style='width: {{item.progress_len < 0 ? "200" : item.progress_len}}rpx'>
+        <view class='rest_time' wx:if="{{item.progress_len > 0}}">剩余{{item.life}}</view>
+        <image src='../../image/icon/long.png' wx:if="{{item.progress_len > 0}}" style='width:100%; height:50rpx'></image>  
+        <view class='button_container'>
+          <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
+          <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
+            <view class='xumiao_btn' catchtap='changeSecond' data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.progress_len > 0}}">+1S</view>
+            <view class='xumiao_btn' catchtap='changeSecond' data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.progress_len > 0}}">-1S</view>
+            <view class='comment_btn' wx:if="{{item.action != 0 || item.progress_len < 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
+              评论
+              <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1 && item.progress_len > 0}}"></image>
+              <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2 && item.progress_len > 0}}"></image>
+            </view>
+          </view>
+        </view>
       </view>
     </view>
-</view>
+  </block>

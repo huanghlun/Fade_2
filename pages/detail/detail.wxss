@@ -64,7 +64,7 @@
 .comment_time {
   padding-right: 40rpx;
   /* font-size: 24rpx; */
-  font-size: 27rpx;
+  font-size: 28rpx;
 }
 
 .comment_line {
@@ -108,7 +108,7 @@
 .comment_reply {
   margin-top: 10rpx;
   padding-left: 30rpx;
-  border-left: 2rpx solid rgba(200, 200, 200, 0.5);
+  border-left: 4rpx solid rgba(200, 200, 200, 0.5);
 }
 
 .reply {

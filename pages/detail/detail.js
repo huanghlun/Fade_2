@@ -4,27 +4,33 @@ var util = require('../../utils/util.js');
 
 Page({
   data: {
-    item: app.globalData.detail_item,
-    baseUrl : app.globalData.baseUrl,
+    item: null,
+    baseUrl : "",
     input_focus: false,
     input_value: "",
     input_placeholder : "发表评论",
     comment_type: "",
     comment_item : null,
-    windowHeight: app.globalData.windowHeight,
+    windowHeight: 0,
+    lowerRequest: true,
+    skip_type: 0,
     scrollTop: 0,
     scrollIntoView: ""
   },
   onLoad: function (option){
     var that = this;
-    if(option.comment == 1) {
+    console.log(this.data.item);
+    this.setData({
+      skip_type: option.type,
+      item: app.globalData.detail_item,
+      baseUrl: app.globalData.baseUrl,
+      windowHeight: app.globalData.windowHeight
+    })
+    if (option.comment == 1) {
       this.setData({
-        scrollIntoView: "#comment_0"
+        scrollIntoView: "comment_0"
       })
     }
-    this.setData({
-      item: app.globalData.detail_item
-    })
     wx.request({
       url: app.globalData.baseUrl + "getNotePage/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/0",
       method: "GET",
@@ -38,9 +44,9 @@ Page({
           wx.showModal({
             title: '加载失败',
             content: '原贴已消失',
-            complete: function(){
+            complete: function () {
               wx.navigateBack({
-                url:"/index"
+                url: "/index"
               })
             }
           })
@@ -48,9 +54,9 @@ Page({
         else {
           console.log("success");
           var comment_list = res2.data.commentQuery.list;
-          for(var j = 0; j < comment_list.length; ++j) {
+          for (var j = 0; j < comment_list.length; ++j) {
             comment_list[j].comment_time = util.advanceDay(comment_list[j].comment_time);
-            for(var m = 0; m < comment_list[j].comments.length; ++m) {
+            for (var m = 0; m < comment_list[j].comments.length; ++m) {
               comment_list[j].comments[m].comment_time = util.advanceDay(comment_list[j].comments[m].comment_time);
             }
           }
@@ -60,7 +66,8 @@ Page({
           that.data.item.xumiao_start = res2.data.noteQuery.start;
           util.updateTime(that.data.item, res2.data.note, res2.data.note);
           that.setData({
-            item : that.data.item
+            item: that.data.item,
+            lowerRequest: that.data.item.comment_list.length < 10 ? false : true
           })
         }
       },
@@ -79,6 +86,7 @@ Page({
   scrollToLow: function() {
     console.log("toLow" + this.data.item.comment_start);
     var that = this;
+    if(!this.data.lowerRequest) return;
     wx.request({
       url: app.globalData.baseUrl + "getTenComment/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + that.data.item.comment_start,
       method: "GET",
@@ -109,8 +117,10 @@ Page({
           that.data.item.comment_list.push.apply(that.data.item.comment_list, comment_list);
           that.data.item.comment_start = res2.data.start;
           that.setData({
-            item: that.data.item
+            item: that.data.item,
+            lowerRequest: that.data.item.comment_list.length < 10 ? false : true
           })
+          console.log(that.data.item);
         }
       },
       fail: function () {
@@ -192,7 +202,9 @@ Page({
     var that = this;
     console.log(comment_id);
     if(type_ == "first" || type_=="second") { //非回复评论
-      
+      that.setData({
+        input_placeholder: "发表评论"
+      })
     } else { //回复评论
       console.log(event.target);
       that.setData({
@@ -200,10 +212,10 @@ Page({
       })
     }
     this.setData({
-      scrollIntoView: "#comment_"+comment_id,
+      scrollIntoView: "comment_"+comment_id,
       input_focus: true,
       comment_type: type_,
-      comment_item: event.target.dataset.item || event.currentTarget.dataset.item
+      comment_item: comment_id != 0 ? (event.target.dataset.item || event.currentTarget.dataset.item) : null
     })
   },
   inputBlur: function(event) {

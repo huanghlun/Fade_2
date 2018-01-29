@@ -10,3 +10,18 @@ textarea {
   width: 750rpx;
   border-bottom: 2rpx solid rgba(200, 200, 200, 0.2);
 }
+
+movable-area, .post_img_container {
+  margin-bottom: 20rpx;
+}
+
+.post_btn {
+  margin: 20rpx 0px;
+  font-size: 32rpx;
+  line-height: 2.5em; 
+}
+
+.pos_line {
+  margin: 20rpx 0rpx;
+  padding: 0.5em 16rpx;
+}

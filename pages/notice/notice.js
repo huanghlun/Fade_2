@@ -1,66 +1,106 @@
 // pages/notice/notice.js
+var app = getApp();
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-  
+    progress_num : 0,
+    fans_num: 0,
+    comment_num : 0
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function (options) {
-  
+    var that = this;
+    //获取续秒评论粉丝数
+    wx.request({
+      url: app.globalData.baseUrl + "getAddMessage/" + app.globalData.fadeuserInfo.user_id,
+      method: "GET",
+      header: {
+        "token": app.globalData.tokenModal
+      },
+      success: function (res2) {
+        console.log(res2.data);
+        if (res2.data.err != undefined) {
+          console.log("update fail");
+        } else {
+          app.globalData.addProgressNum = 0;
+          app.globalData.addFansNum = 0;
+          app.globalData.addCommentNum = 0;
+          that.setData({
+            progress_num: res2.data.addContributeNum,
+            fans_num: res2.data.addFansNum,
+            comment_num: res2.data.addCommentNum
+          })
+        }
+      },
+      fail: function () {
+        console.log("update fail");
+      }
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
   onReady: function () {
-  
+    var that = this;
+    //响应websocket
+    wx.onSocketMessage(function (res) {
+      console.log('notice收到服务器内容：' + res.data);
+      var data = JSON.parse(res.data);
+      if (data.success == "00") {
+        that.setData({
+          progress_num: ++that.data.progress_num
+        })
+      } else if (data.success == "01") {
+        that.setData({
+          fans_num: ++that.data.fans_num
+        })
+      } else if (data.success == "02") {
+        that.setData({
+          comment_num: ++that.data.comment_num 
+        })
+      }
+      console.log(that.data);
+    })
   },
 
-  /**
-   * 生命周期函数--监听页面显示
-   */
   onShow: function () {
-  
+    //更新数量
+    // this.setData({
+    //   progress_num: this.data.progress_num,
+    //   fans_num: 0,
+    //   comment_num: 0
+    // })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
   onHide: function () {
   
   },
 
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-  
-  },
 
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
   onPullDownRefresh: function () {
   
   },
 
-  /**
-   * 页面上拉触底事件的处理函数
-   */
   onReachBottom: function () {
   
   },
 
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-  
+  tapNav: function(event) {
+    var type_ = event.currentTarget.dataset.type;
+    switch(type_) {
+      case "1" :
+        this.setData({
+          progress_num : 0
+        })
+        break;
+      case "2":
+        this.setData({
+          fans_num: 0
+        })
+        break;
+      case "3":
+        this.setData({
+          comment_num: 0
+        })
+        break;  
+    }
   }
 })

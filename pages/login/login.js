@@ -53,9 +53,13 @@ Page({
                     }
                     else {
                       console.log(res1)
-                      wx.setStorageSync("user_openid", res1.data.user.wechat_id);
+                      wx.setStorageSync("user_openid", res1.data.wechat_id);
                       app.globalData.fadeuserInfo = res1.data.user;
-                      app.globalData.tokenModal = res1.data.user.tokenModal;
+                      app.globalData.tokenModal = res1.data.user.tokenModel;
+                      //打开websocket及发送上线请求
+                      app.openWebSocket(app.globalData.fadeuserInfo.user_id, app.globalData.tokenModal.token);
+                      app.onlineRequest(app.globalData.fadeuserInfo.user_id, app.globalData.tokenModal);
+                      console.log("register switch");
                       setTimeout(function(){
                         wx.switchTab({
                           url: '../index/index'
@@ -83,7 +87,11 @@ Page({
                     }
                     else {
                       app.globalData.fadeuserInfo = res1.data.user;
-                      app.globalData.tokenModal = res1.data.tokenModal;
+                      app.globalData.tokenModal = res1.data.tokenModel;
+                      console.log(res1.data);
+                      //打开websocket及发送上线请求
+                      app.openWebSocket(res1.data.user.user_id, res1.data.tokenModel.token);
+                      app.onlineRequest(res1.data.user.user_id, res1.data.tokenModel);
                       // console.log(app.globalData.fadeuserInfo);
                       setTimeout(function () {
                         wx.switchTab({
@@ -115,6 +123,9 @@ Page({
       })
     }
     else { //直接跳转
+      //打开websocket及发送上线请求
+      app.openWebSocket(app.globalData.fadeuserInfo.user_id, app.globalData.tokenModal.token);
+      app.onlineRequest(app.globalData.fadeuserInfo.user_id, app.globalData.tokenModal);
       wx.switchTab({
         url: '../index/index'
       }) 

@@ -2,11 +2,15 @@
 <scroll-view scroll-x="true" style='display:none; width:750rpx;'></scroll-view>
 <image class='post_img_container' src='../../image/post_placeholder.png' mode='widthFix' bindtap='choosePhoto' style="display:{{post_imgs_url.length == 0 ? 'block' : 'none' }}">
 </image>
-<image src='{{post_imgs_url[photo_index]}}' mode='widthFix' bindload='loadImage' style='display:none;'> 
+<image src='{{post_imgs_url[photo_index]}}' mode='widthFix' bindload='loadImage' style="position:absolute; top:0px; left:0px; height:{{photo_height}}px; width:{{windowWidth}}px; z-index:2; display: {{post_imgs_url.length == 0 ? 'none' : 'block'}}"> 
 </image>
-<movable-area style="height:{{photo_height}}px; width:{{windowWidth}}px; padding:0px; display:{{post_imgs_url.length == 0 ? 'none' : 'block' }}; background:url({{post_imgs_url[photo_index]}}); background-size: cover;">
-    <movable-view style="height: {{cut_height}}px; width: {{cut_width}}px; background: rgba(0,0,0,0.5);" x="{{x}}" y="{{y}}" direction="all">
+<movable-area style="height:{{photo_height}}px; width:{{windowWidth}}px; padding:0px; display:{{post_imgs_url.length == 0 ? 'none' : 'block' }}; background:transparent; z-index: 3;">
+    <movable-view style="height: {{cut_height}}px; width: {{cut_width}}px; background: rgba(0,0,0,0.5); z-index: 3;" x="{{x}}" y="{{y}}" direction="all" id='moveableView'>
     </movable-view>
 </movable-area>
-<textarea placeholder='点击此处输入内容' maxlength="-1"  auto-height='true' cursor-spacing='3'></textarea>
-<view class='pos_item'>北京·人民大会堂</view>
+<textarea placeholder='点击此处输入内容' maxlength="-1"  auto-height='true' cursor-spacing='5' bindblur='changeContent'></textarea>
+<view class='pos_line'>
+  <switch bindchange="switch1Change" checked='{{send_pos}}' style='vertical-align: middle;'/>
+  <view class='pos_item' style="display:inline-block; margin-left: 20rpx; vertical-align:middle;">{{note_position}}</view>
+</view>
+<button bindtap='postItem' type='primary' class='post_btn'>发布</button>

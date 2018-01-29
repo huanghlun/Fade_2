@@ -1,29 +1,29 @@
 <!--pages/notice/notice.wxml-->
-<navigator url='' class='notice_item flex flex-align-center'>
+<navigator url='../noticeDetail/noticeDetail?query=1' hover-stay-time='200' class='notice_item flex flex-align-center' bindtap='tapNav' data-type='1'>
   <view class='notice_item_icon flex-none'>
-    <image src='../../image/icon/进度条.png' style='width:100%; height:100%;'></image>
+    <image src='../../image/icon/progress.png' style='width:100%; height:100%;'></image>
   </view>
   <view class='notice_item_hd flex-1'>进度贡献</view>
-  <view class='notice_item_badge flex-none'>1</view>
+  <view class='notice_item_badge flex-none' wx:if="{{progress_num!=0}}">{{progress_num}}</view>
   <view class='notice_item_ft'></view>
 </navigator>
-<navigator url='' class='notice_item flex flex-align-center'>
+<navigator url='../noticeDetail/noticeDetail?query=2' hover-stay-time='200' class='notice_item flex flex-align-center' bindtap='tapNav' data-type='2'>
   <view class='notice_item_icon flex-none'>
-    <image src='../../image/icon/新的粉丝.png' style='width:100%; height:100%;'></image>
+    <image src='../../image/icon/fans.png' style='width:100%; height:100%;'></image>
   </view>
   <view class='notice_item_hd flex-1'>新的粉丝</view>
-  <view class='notice_item_badge flex-none'>1</view>
+  <view class='notice_item_badge flex-none' wx:if="{{fans_num!=0}}">{{fans_num}}</view>
   <view class='notice_item_ft'></view>
 </navigator>
-<navigator url='' class='notice_item flex flex-align-center'>
+<navigator url='../noticeDetail/noticeDetail?query=3' hover-stay-time='200' class='notice_item flex flex-align-center' bindtap='tapNav' data-type='3'>
   <view class='notice_item_icon flex-none'>
-    <image src='../../image/icon/评论圆.png' style='width:100%; height:100%;'></image>
+    <image src='../../image/icon/comment.png' style='width:100%; height:100%;'></image>
   </view>
   <view class='notice_item_hd flex-1'>评论</view>
-  <view class='notice_item_badge flex-none'>1</view>
+  <view class='notice_item_badge flex-none' wx:if="{{comment_num!=0}}">{{comment_num}}</view>
   <view class='notice_item_ft'></view>
 </navigator>
-<navigator url='' class='notice_item flex flex-align-center'>
+<navigator url='' hover-stay-time='200' class='notice_item flex flex-align-center'>
   <view class='notice_item_icon flex-none'>
     <image src='../../image/avatar.png' style='width:100%; height:100%;'></image>
   </view>

@@ -1,42 +1,57 @@
 page{
-  background-color: gainsboro;
+  /* background-color: gainsboro; */
 }
 
 .img_name_container{
+  padding: 0px 33.33rpx 0px 33.33rpx;
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 20rpx 0rpx 0px 0px;
   background-color: #fff;
 }
 
 .log_avatar{
-  width: 140rpx;
-  height: 140rpx;
+  width: 130rpx;
+  height: 130rpx;
   border-radius: 50%;
-  margin: 20rpx;
   flex: none;
 }
 
 .log_name_qianming {
   flex: 1;
-  line-height: 1.8em;
+  line-height: 1em;
+  margin: 0px 24rpx;
 }
 
 .nickname{
-  font-size: 40rpx;
+  font-size: 35rpx;
+  margin-bottom: 16rpx;
   display: block;
 }
 
+.qianming, .fadename, .school {
+  font-size: 32rpx;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .qianming {
-  font-size: 30rpx;
-  display: block;
-  color: #999;
+  color: black;
+  margin: 26rpx 33.33rpx 0px;
+}
+
+.school {
+  color: black;
+  margin: 18rpx 33.33rpx;
+}
+
+.school_image {
+  width: 30rpx;
+  margin-right: 16rpx;
 }
 
 .img_name_ft {
   flex: none;
-  margin-right: 20rpx;
+  margin-right: 26rpx;
   /* position:relative;
   text-align: right; */
 }
@@ -56,22 +71,29 @@ page{
 .fans_line {
   display: block;
   width: 100%;
-  background-color: #fff;
-  text-align: center;
+  margin-top: 32rpx;
+   text-align: center;
 }
 
 .fans_line_item {
   display: inline-block;
-  width: 33%;
+  width: 24.5%;
+  padding-bottom: 0.3em;
+  border-bottom: 4rpx solid rgba(0, 0, 0, 0.1); 
+}
+
+.fans_line_item_selected {
+  padding-bottom: 0.3em;
+  border-bottom: 4rpx solid #29abe2;    
 }
 
 .fans_item_hd {
   display: block;
-  color: #999;
-  font-size: 30rpx;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 32rpx;
 }
 
 .fans_item_ct {
   font-weight: bold;
-  font-size: 36rpx;
+  font-size: 32rpx;
 }
