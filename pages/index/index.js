@@ -47,43 +47,7 @@ Page({
       animationData: animation.export()
     })
 
-    var that = this;
-    //发出首次加载的请求
-    wx.request({
-      url: app.globalData.baseUrl + "getTenNoteByTime/" + app.globalData.fadeuserInfo.user_id + "/" + that.data.start + "/" + app.globalData.fadeuserInfo.concern_num,
-      method: "GET",
-      header: {
-        "token": app.globalData.tokenModal
-      },
-      success: function (res2) {
-        console.log(res2.data);
-        if(res2.data.err != undefined){
-          // console.log("here");
-          wx.showModal({
-            title: '加载失败',
-            content: '加载信息失败，请检查网络状况',
-            complete: that.setData({
-              uphidden: true
-            })
-          })
-        }
-        else{
-          util.cutArray(that.data.information_list, res2.data.list); //终极查重
-          for (var i = 0; i < res2.data.list.length; i++) {
-            util.addInformation(i, res2.data.list, that.data.information_list, that.data.windowWidth, "push");
-          }
-          that.setData({
-            start: res2.data.start,
-            uphidden: true,
-            information_list: that.data.information_list
-          })  
-          console.log(that.data.information_list);
-        }
-      },
-      fail: function () {
-        console.log("connect fail");
-      }
-    })
+    this.getTenNoteByTime();
   },
   //详情页->首页，发布页switch->首页
   onShow: function() {
@@ -95,16 +59,18 @@ Page({
       })
       console.log(this.data.information_list[index]);
     }
+    app.globalData.detail_item_index = -1;
 
     if(app.globalData.post_item != null) {
       var temp_array = [];
       temp_array.push(app.globalData.post_item);
-      util.addInformation(0, temp_array, this.data.information_list, this.data.windowHeight, "unshift");
+      util.addInformation(0, temp_array, this.data.information_list, this.data.windowWidth, "unshift");
       temp_array = null;
       app.globalData.post_item = null;
       this.setData({
         information_list : this.data.information_list
       })
+      console.log(this.data.information_list);
       wx.showToast({
         title: '发布成功',
         icon: "success"
@@ -122,8 +88,20 @@ Page({
       }
     }
     wx.navigateTo({
-      url: '../detail/detail?type=1' + (query != undefined ? '&comment=1' : '')
+      url: '../detail/detail?type=0' + (query != undefined ? '&comment=1' : '')
     });
+  },
+  navigateToOthers: function(event) {
+    console.log("navigateTo :" + event.currentTarget.dataset.userid);
+    if(event.currentTarget.dataset.userid == app.globalData.fadeuserInfo.user_id) {
+      wx.switchTab({
+        url: '../logs/logs'
+      })
+    } else {
+      wx.navigateTo({
+        url: '../others/others?user_id=' + event.currentTarget.dataset.userid
+      })
+    }   
   },
   getPhotoWH: function(event) {
     var index = event.target.dataset.pos;
@@ -143,7 +121,7 @@ Page({
     }, function(res) {
       console.log(res);
       for (var i = 0; i < res.dataset.img.length; i++) {
-        photolisturl.push(res.dataset.img[i].image_url);
+        photolisturl.push(that.data.baseUrl + res.dataset.img[i].image_url);
       }
       wx.previewImage({
         urls: photolisturl,
@@ -157,19 +135,18 @@ Page({
     }).exec();
   },
   onPullDownRefresh: function(event) {
-    var that = this, updateList = [];
-    for (var i = 0; i < that.data.information_list.length; i++) {
-      updateList.push(JSON.stringify({
-        note_id : that.data.information_list[i].note_id,
-        target_id: that.data.information_list[i].target_id
-      }))
-    }
+    var that = this;
     // console.log(updateList.toString().replace(/\"/g, "'"));
     wx.request({
-      url: app.globalData.baseUrl + "getMoreNote/" + app.globalData.fadeuserInfo.user_id + "/[" + updateList.toString().replace(/\"/g, "'") + "]",
-      method: "GET",
+      url: app.globalData.baseUrl + "getMoreNote",
+      method: "POST",
       header: {
-        "token" : app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal),
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      data: {
+        user_id : app.globalData.fadeuserInfo.user_id,
+        updateList: JSON.stringify(that.data.information_list)
       },
       success: function (res2) {
         console.log(res2.data);
@@ -219,57 +196,15 @@ Page({
       this.setData({
         down_show: true
       })
-      wx.request({
-        url: app.globalData.baseUrl + "getTenNoteByTime/" + app.globalData.fadeuserInfo.user_id + "/" + that.data.start + "/" + app.globalData.fadeuserInfo.concern_num,
-        method: "GET",
-        header: {
-          "token": app.globalData.tokenModal
-        },
-        success: function (res2) {
-          console.log("reach bottom");
-          console.log(res2.data);
-          that.setData({
-            downRefresh: res2.data.list.length < 10 ? false : true
-          })
-          if (res2.data.err != undefined || res2.data.list == undefined || res2.data.list.length == 0) {
-            // console.log("here");
-            wx.showModal({
-              title: '加载完毕',
-              content: '已没有剩余的信息加载',
-              complete: function () {
-                that.setData({
-                  down_show: false
-                })
-              }
-            })
-          }
-          else {
-            util.cutArray(that.data.information_list, res2.data.list); //终极查重
-            for (var i = 0; i < res2.data.list.length; i++) {
-              util.addInformation(i, res2.data.list, that.data.information_list, that.data.windowWidth, "push");
-            }
-            that.setData({
-              start: res2.data.start || that.data.start,
-              down_show: false,
-              information_list: that.data.information_list
-            })
-          }
-        },
-        fail: function () {
-          that.setData({
-            down_show: false
-          })
-          console.log("connect fail");
-        }
-      })
+      this.getTenNoteByTime();
     } 
   },
   changeSecond: function(event) {
-    var type = event.target.dataset.type;
+    var type_ = event.target.dataset.type;
     var note_id = event.target.dataset.pos;
     for(var i = 0; i < this.data.information_list.length; i++) {
       if(this.data.information_list[i].note_id == note_id) {
-        this.data.information_list[i].action = type;
+        this.data.information_list[i].action = type_;
         break;
       }
     }
@@ -280,16 +215,16 @@ Page({
     var temp_obj = {
       user_id: app.globalData.fadeuserInfo.user_id,
       nickname: app.globalData.fadeuserInfo.nickname,
-      note_content: that.data.information_list[i].note_content || that.data.information_list[i].origin.note_content,
       head_image_url: app.globalData.fadeuserInfo.head_image_url,
-      type: that.data.information_list[i].action,
+      "type": that.data.information_list[i].action,
       target_id: that.data.information_list[i].type == 0 ? that.data.information_list[i].note_id : that.data.information_list[i].target_id
     }
+    console.log(app.globalData.tokenModal);
     wx.request({
       url: app.globalData.baseUrl + "changeSecond",
       method: "POST",
       header: {
-        "token": app.globalData.tokenModal,
+        "tokenModel": JSON.stringify(app.globalData.tokenModal),
         "Content-type": "application/x-www-form-urlencoded"
       },
       data: {
@@ -318,6 +253,54 @@ Page({
   onPageScroll: function(event) {
     var that = this;
     util.noteIfDie(that);
+  },
+  //上拉或首次获取10条帖子
+  getTenNoteByTime: function() {
+    var that = this;
+    wx.request({
+      url: app.globalData.baseUrl + "getTenNoteByTime",
+      method: "POST",
+      header: {
+        "tokenModel": JSON.stringify(app.globalData.tokenModal),
+        "Content-type": "application/x-www-form-urlencoded"
+      },
+      data: {
+        user_id: app.globalData.fadeuserInfo.user_id,
+        start: that.data.start,
+        concern_num: app.globalData.fadeuserInfo.concern_num,
+        updateList: JSON.stringify(that.data.information_list)
+      },
+      success: function (res2) {
+        console.log(res2.data);
+        if (res2.data.err != undefined) {
+          // console.log("here");
+          wx.showModal({
+            title: '加载失败',
+            content: '加载信息失败，请检查网络状况',
+            complete: that.setData({
+              uphidden: true
+            })
+          })
+        }
+        else {
+          util.cutArray(that.data.information_list, res2.data.list); //终极查重
+          for (var i = 0; i < res2.data.list.length; i++) {
+            util.addInformation(i, res2.data.list, that.data.information_list, that.data.windowWidth, "push");
+          }
+          that.setData({
+            start: res2.data.start || that.data.start,
+            uphidden: true,
+            down_show: false,
+            information_list: that.data.information_list,
+            downRefresh: res2.data.list.length < 10 ? false : true
+          })
+          console.log(that.data.information_list);
+        }
+      },
+      fail: function () {
+        console.log("connect fail");
+      }
+    })
   }
 })
  

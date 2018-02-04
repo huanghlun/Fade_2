@@ -7,32 +7,31 @@ Page({
     logs: [],
     fadeuserInfo: null,
     baseUrl: app.globalData.baseUrl,
-    fade_start:0,
-    fade_list:[],
+    fade_start: 0,
+    fade_list: [],
     live_start: 0,
     user_id: 0,
     my_id: 0,
     live_list: [],
     live_finish: false,
     fade_finish: false,
-    showView: "0",
-    isConcern: -1
+    isConcern: 0,
+    showView: "0"
   },
   onLoad: function (options) {
     this.setData({
       my_id: app.globalData.fadeuserInfo.user_id,
-      user_id: app.globalData.fadeuserInfo.user_id,
-      fadeuserInfo: app.globalData.fadeuserInfo
+      user_id: options.user_id
     })
     var that = this;
     this.getPersonPage(this.data.user_id, app.globalData.fadeuserInfo.user_id);
   },
 
   //从详情页跳转回来
-  onShow: function() {
+  onShow: function () {
     var index = app.globalData.detail_item_index;
     if (index != -1) {
-      if(this.data.showView == "0") {
+      if (this.data.showView == "0") {
         this.data.live_list[index] = app.globalData.detail_item;
         this.setData({
           live_list: this.data.live_list
@@ -47,27 +46,27 @@ Page({
     app.globalData.detail_item_index = -1;
   },
 
-  onPullDownRefresh:function(){
+  onPullDownRefresh: function () {
     this.getPersonPage(this.data.user_id, app.globalData.fadeuserInfo.user_id);
   },
 
-  onReachBottom: function() {
+  onReachBottom: function () {
     //获取动态
     switch (this.data.showView) {
       case "0":
-        if(this.data.live_finish == false)
+        if (this.data.live_finish == false)
           this.getLiveNote(this.data.user_id, app.globalData.fadeuserInfo.user_id, this.data.live_start, "push");
         break;
       case "1":
-        if(this.data.fade_finish == false)
-          this.getMyNote(this.data.user_id, this.data.fade_start, "push");
+        if (this.data.fade_finish == false)
+          this.getOtherPersonNote(this.data.user_id, this.data.my_id, this.data.fade_start, "push");
         break;
     }
   },
 
-  switchView: function(event) {
+  switchView: function (event) {
     var type_ = event.currentTarget.dataset.type;
-    if(this.data.showView != type_) {
+    if (this.data.showView != type_) {
       this.setData({
         showView: type_
       })
@@ -82,19 +81,19 @@ Page({
           }
           break;
         case "1":
-          if(this.data.fade_list.length == 0) {
+          if (this.data.fade_list.length == 0) {
             //首次获取fade
-            this.getMyNote(this.data.user_id, 0, "push");
+            this.getOtherPersonNote(this.data.user_id, this.data.my_id, 0, "push");
           } else {
             //更新fade看看有没有新增的
-            this.getMyNote(this.data.user_id, 0, "unshift");
+            this.getOtherPersonNote(this.data.user_id, this.data.my_id, 0, "unshift");
           }
           break;
       }
     }
   },
 
-  tapSelf: function() {
+  tapSelf: function () {
     wx.navigateTo({
       url: '../self/self'
     })
@@ -125,9 +124,10 @@ Page({
     }).exec();
   },
 
-  navigateTo: function(event) {
+  //跳转
+  navigateTo: function (event) {
     var query = event.target.dataset.comment;
-    if(this.data.showView == "0") {
+    if (this.data.showView == "0") {
       for (var i = 0; i < this.data.live_list.length; i++) {
         if (this.data.live_list[i].note_id == event.currentTarget.dataset.pos) {
           app.globalData.detail_item = this.data.live_list[i];
@@ -149,14 +149,14 @@ Page({
     });
   },
 
-  navigateToOthers: function(event) {
+  navigateToOthers: function (event) {
     wx.navigateTo({
       url: '../others/others?user_id=' + event.currentTarget.dataset.userid
     })
   },
 
   //获取刷新个人信息
-  getPersonPage: function(user_id, my_id) {
+  getPersonPage: function (user_id, my_id) {
     var that = this;
     wx.request({
       url: app.globalData.baseUrl + 'getPersonPage/' + user_id + '/' + my_id,
@@ -171,6 +171,7 @@ Page({
           util.addInformation(i, res.data.query.list, that.data.live_list, app.globalData.windowWidth, "push");
         }
         that.setData({
+          isConcern: res.data.isConcern,
           fadeuserInfo: res.data.user,
           live_list: that.data.live_list,
           live_start: res.data.query.start
@@ -183,7 +184,7 @@ Page({
   },
 
   //获取动态
-  getLiveNote: function(user_id, my_id, start, mark) {
+  getLiveNote: function (user_id, my_id, start, mark) {
     var that = this;
     wx.request({
       url: app.globalData.baseUrl + 'getLiveNote/' + user_id + '/' + my_id + '/' + start,
@@ -193,16 +194,16 @@ Page({
       },
       success: function (res) {
         console.log(res.data);
-        if(mark == 'unshift') {
+        if (mark == 'unshift') {
           util.cutArray(that.data.live_list, res.data.list); //查重
-          for (var i = res.data.list.length-1; i >= 0; --i) {
+          for (var i = res.data.list.length - 1; i >= 0; --i) {
             util.addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "unshift");
           }
         } else {
           for (var i = 0; i < res.data.list.length; ++i) {
             util.addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "push");
           }
-        }        
+        }
         that.setData({
           live_start: (mark == 'push' && res.data.list.length >= 10) ? res.data.start : that.data.live_start,
           live_list: that.data.live_list,
@@ -216,10 +217,10 @@ Page({
   },
 
   //获取自己原创fade
-  getMyNote: function(user_id, start, mark) {
+  getOtherPersonNote: function (user_id, my_id, start, mark) {
     var that = this;
     wx.request({
-      url: app.globalData.baseUrl + 'getMyNote/' + user_id +  '/' + start,
+      url: app.globalData.baseUrl + 'getOtherPersonNote/' + user_id + '/' + my_id + '/' + start,
       method: 'GET',
       header: {
         "tokenModel": JSON.stringify(app.globalData.tokenModal)
@@ -237,9 +238,9 @@ Page({
           }
         }
         that.setData({
-          fade_start: mark == 'push'  ? res.data.start : that.data.fade_start,
+          fade_start: mark == 'push' ? res.data.start : that.data.fade_start,
           fade_list: that.data.fade_list,
-          fade_finish: res.data.list.length >= 10 ? false: true
+          fade_finish: res.data.list.length >= 10 ? false : true
         })
       },
       error: function (err) {
@@ -252,7 +253,7 @@ Page({
     var type_ = event.target.dataset.type;
     var list_name = event.target.dataset.list;
     var note_id = event.target.dataset.pos;
-    if(list_name == 'fade') {
+    if (list_name == 'fade') {
       for (var i = 0; i < this.data.fade_list.length; i++) {
         if (this.data.fade_list[i].note_id == note_id) {
           this.data.fade_list[i].action = type_;
@@ -291,8 +292,8 @@ Page({
       },
       success: function (res2) {
         console.log(res2.data);
-        var temp = list_name == "fade" ? that.data.fade_list[i] : that.data.live_list[i], 
-            data1 = res2.data;
+        var temp = list_name == "fade" ? that.data.fade_list[i] : that.data.live_list[i],
+          data1 = res2.data;
         if (res2.data.err != undefined) {
           console.log("changeSecond fail");
         } else {

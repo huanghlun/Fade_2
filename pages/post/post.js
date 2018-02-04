@@ -48,7 +48,6 @@ Page({
     })
   },
   loadImage: function(event) {
-    console.log(event.detail);
     var img_size = parseFloat(event.detail.width / event.detail.height);
     if(img_size >= 1.875) { //超宽图
       var cut_height = parseFloat(app.globalData.windowWidth / img_size); //等于原图高
@@ -71,7 +70,6 @@ Page({
     this.data.post_imgs[this.data.photo_index].cut_size = cut_size;
     this.data.post_imgs[this.data.photo_index].width = app.globalData.windowWidth;
     this.data.post_imgs[this.data.photo_index].height = parseFloat(app.globalData.windowWidth / img_size);
-    console.log(this.data.post_imgs[this.data.photo_index]);
     this.setData({
       photo_height: parseFloat(this.data.windowWidth / img_size),
       cut_width: cut_width,
@@ -110,48 +108,49 @@ Page({
         note_content: that.data.note_content,
         images: images
       };
-      wx.uploadFile({
-        url: app.globalData.baseUrl + 'addNote',
-        filePath: that.data.post_imgs_url[that.data.photo_index],
-        name: 'file',
-        header: {
-          "token": app.globalData.tokenModal,
-          "Content-Type": "multipart/form-data"
-        },
-        formData: {
-          note: JSON.stringify(note)
-        },
-        success: function(res) {
-          console.log(res.data);
-          var data = JSON.parse(res.data);
-          note.note_id = data.extra.note_id;
-          note.post_time = data.extra.post_time;
-          note.add_num = 0;
-          note.comment_num = 0;
-          note.sub_num = 0;
-          note.is_die = 1;
-          note.target_id = 0;
-          note.type = 0;
-          note.action = 0;
-          note.origin = null;
-          note.fetchTime = util.formatDate(data.extra.post_time).getTime();
-          for(var i = 0; i < data.extra.imageUrls.length; i++) {
-            note.images[i].image_url = data.extra.imageUrls[i];
-            note.images[i].note_id = data.extra.note_id;
+        wx.uploadFile({
+          url: app.globalData.baseUrl + 'addNote',
+          filePath: that.data.post_imgs_url[that.data.photo_index] || "",
+          name: 'file',
+          header: {
+            "tokenModel": JSON.stringify(app.globalData.tokenModal),
+            "Content-Type": "multipart/form-data"
+          },
+          formData: {
+            note: JSON.stringify(note)
+          },
+          success: function (res) {
+            console.log(res.data);
+            var data = JSON.parse(res.data);
+            note.note_id = data.extra.note_id;
+            note.post_time = data.extra.post_time;
+            note.add_num = 0;
+            note.comment_num = 0;
+            note.sub_num = 0;
+            note.is_die = 1;
+            note.target_id = 0;
+            note.type = 0;
+            note.action = 0;
+            note.origin = null;
+            note.fetchTime = util.formatDate(data.extra.post_time).getTime();
+            for (var i = 0; i < data.extra.imageUrls.length; ++i) {
+              note.images[i].image_url = data.extra.imageUrls[i];
+              note.images[i].note_id = data.extra.note_id;
+            }
+            app.globalData.post_item = note;
+            wx.navigateBack({
+              delta: 1
+            })
+          },
+          error: function (err) {
+            console.log(err);
+            wx.showModal({
+              title: '发布失败',
+              content: '内容发布失败，请检查网络情况'
+            })
           }
-          app.globalData.post_item = note;
-          wx.navigateBack({
-            delta: 1
-          })
-        },
-        error: function(err) {
-          console.log(err);
-          wx.showModal({
-            title: '发布失败',
-            content: '内容发布失败，请检查网络情况'
-          })
-        }
-      })
+        })
+      
     }).exec();
   },
   switch1Change: function(event) {

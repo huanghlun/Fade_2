@@ -8,7 +8,8 @@
     "pages/self/self",
     "pages/detail/detail",
     "pages/post/post",
-    "pages/temp/temp"
+    "pages/temp/temp",
+    "pages/others/others"
   ],
   "window":{
     "backgroundTextStyle":"dark",

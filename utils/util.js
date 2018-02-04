@@ -75,6 +75,7 @@ function updateInformation(a, array, ori_array, that) {
   for(var i = 0; i < ori_array.length; i++) {
     if (temp.note_id == ori_array[i].note_id && temp.is_die == 1) {
       updateTime(ori_array[i], temp, temp.origin);
+      ori_array[i].action = temp.action;
     }
   }
 }
@@ -107,9 +108,9 @@ function updateTime(update_note, new_note, new_note_origin) {
   }
   var time_life;
   if (update_note.type != 0) {
-    time_life = calLeftTime(new_note_origin.add_num, new_note_origin.sub_num, update_note.origin.post_time, new_note_origin.fetchTime);
+    time_life = calLeftTime(new_note_origin.add_num, new_note_origin.sub_num, update_note.origin.post_time, new_note_origin.fetchTime || new Date().getTime());
   } else {
-    time_life = calLeftTime(new_note.add_num, new_note.sub_num, update_note.post_time, new_note.fetchTime);
+    time_life = calLeftTime(new_note.add_num, new_note.sub_num, update_note.post_time, new_note.fetchTime || new Date().getTime());
   }
   update_note.life = time_life.life_str;
   update_note.progress_len = time_life.progress_len;
@@ -240,7 +241,7 @@ function noteIfDie(that) {
 function cutArray(arr1, arr2) { //arr2被减
   for (var i = arr1.length - 1; i >= 0; i--) {
     for (var j = arr2.length - 1; j >= 0; j--) {
-      if (arr1[i] == arr2[j]) {
+      if (arr1[i].note_id == arr2[j].note_id) {
         arr2.splice(j, 1);
         break;
       }

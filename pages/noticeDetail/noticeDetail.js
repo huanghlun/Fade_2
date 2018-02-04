@@ -137,7 +137,7 @@ Page({
       url: that.data.baseUrl + 'getAddContribute/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start + '/' + that.data.point,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);
@@ -166,7 +166,7 @@ Page({
       url: that.data.baseUrl + 'getOldContribute/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);
@@ -194,7 +194,7 @@ Page({
       url: that.data.baseUrl + 'getAddFans/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start + '/' + that.data.point,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);
@@ -220,7 +220,7 @@ Page({
       url: that.data.baseUrl + 'getOldFans/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);
@@ -245,7 +245,7 @@ Page({
       url: that.data.baseUrl + 'getAddComment/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start + '/' + that.data.point,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);
@@ -274,7 +274,7 @@ Page({
       url: that.data.baseUrl + 'getOldComment/' + app.globalData.fadeuserInfo.user_id + '/' + that.data.start,
       method: 'GET',
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res) {
         console.log(res.data);

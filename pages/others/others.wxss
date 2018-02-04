@@ -1,0 +1,10 @@
+/* pages/others/others.wxss */
+.concern_btn {
+  font-size: 28rpx;
+  text-align: center;
+  width: 104rpx;
+  border-radius: 4rpx;
+  border: rgb(41, 171, 226) solid 2rpx;
+   /* background-color: rgb(41, 171, 226);  */
+   /* background-color: white;  */
+}

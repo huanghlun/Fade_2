@@ -15,7 +15,7 @@ Page({
       url: app.globalData.baseUrl + "getAddMessage/" + app.globalData.fadeuserInfo.user_id,
       method: "GET",
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res2) {
         console.log(res2.data);

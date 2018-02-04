@@ -32,10 +32,10 @@ Page({
       })
     }
     wx.request({
-      url: app.globalData.baseUrl + "getNotePage/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/0",
+      url: app.globalData.baseUrl + "getNotePage/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/" + option.type,
       method: "GET",
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res2) {
         console.log(res2.data);
@@ -52,7 +52,6 @@ Page({
           })
         }
         else {
-          console.log("success");
           var comment_list = res2.data.commentQuery.list;
           for (var j = 0; j < comment_list.length; ++j) {
             comment_list[j].comment_time = util.advanceDay(comment_list[j].comment_time);
@@ -69,6 +68,8 @@ Page({
             item: that.data.item,
             lowerRequest: that.data.item.comment_list.length < 10 ? false : true
           })
+
+          console.log(that.data.item);
         }
       },
       fail: function () {
@@ -88,10 +89,10 @@ Page({
     var that = this;
     if(!this.data.lowerRequest) return;
     wx.request({
-      url: app.globalData.baseUrl + "getTenComment/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + that.data.item.comment_start,
+      url: app.globalData.baseUrl + "getTenComment/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + (that.data.item.comment_start || 0),
       method: "GET",
       header: {
-        "token": app.globalData.tokenModal
+        "tokenModel": JSON.stringify(app.globalData.tokenModal)
       },
       success: function (res2) {
         console.log(res2.data);
@@ -152,8 +153,8 @@ Page({
     }).exec();
   },
   changeSecond: function (event) {
-    var type = event.target.dataset.type;
-    this.data.item.action = type;
+    var type_ = event.target.dataset.type;
+    this.data.item.action = type_;
     this.setData({
       item: this.data.item
     })
@@ -170,7 +171,7 @@ Page({
       url: app.globalData.baseUrl + "changeSecond",
       method: "POST",
       header: {
-        "token": app.globalData.tokenModal,
+        "tokenModel": JSON.stringify(app.globalData.tokenModal),
         "Content-type": "application/x-www-form-urlencoded"
       },
       data: {
@@ -244,7 +245,7 @@ Page({
         url: app.globalData.baseUrl + "addComment",
         method: "POST",
         header: {
-          "token": app.globalData.tokenModal,
+          "tokenModel": JSON.stringify(app.globalData.tokenModal),
           "Content-type": "application/x-www-form-urlencoded"
         },
         data: {
@@ -295,7 +296,7 @@ Page({
         url: app.globalData.baseUrl + "addSecondComment",
         method: "POST",
         header: {
-          "token": app.globalData.tokenModal,
+          "tokenModel": JSON.stringify(app.globalData.tokenModal),
           "Content-type": "application/x-www-form-urlencoded"
         },
         data: {
