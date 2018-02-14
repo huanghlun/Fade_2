@@ -29,6 +29,13 @@ Fade 是一款含有时间元素的轻博客社交应用，fade的表义即为�
 * 后端服务器通过hadoop运行基于用户的推荐算法，在首页中附带推送一些感兴趣的用户及其帖子
 * 安卓端和ios端有更炫酷的帖子消失动画
 
+## Screenshot
+
+<img src="https://github.com/huanghlun/img_repository/raw/master/fade1.jpg" width="35%" style="margin-right:10%" />
+<img src="https://github.com/huanghlun/img_repository/raw/master/fade2.jpg" width="35%" />
+<img src="https://github.com/huanghlun/img_repository/raw/master/fade3.jpg" width="35%" style="margin-right:10%" />
+<img src="https://github.com/huanghlun/img_repository/raw/master/fade4.jpg" width="35%" />
+
 ## Author
 
 | Author | E-mail |
