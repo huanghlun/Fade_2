@@ -23,15 +23,15 @@
   <view class='notice_item_badge flex-none' wx:if="{{comment_num!=0}}">{{comment_num}}</view>
   <view class='notice_item_ft'></view>
 </navigator>
-<navigator url='' hover-stay-time='200' class='notice_item flex flex-align-center'>
+<!-- <navigator url='' hover-stay-time='200' class='notice_item flex flex-align-center'>
   <view class='notice_item_icon flex-none'>
     <image src='../../image/avatar.png' style='width:100%; height:100%;'></image>
   </view>
-  <view class='notice_item_hd flex-1'>
+   <view class='notice_item_hd flex-1'>
     <view class='notice_item_content_hd'>
       <view class='notice_item_time'>12-2-8:30</view>
       思瑶
     </view>
     <view class='notice_item_content'>周炳讯真帅</view>
-  </view>
-</navigator>
+  </view> 
+</navigator> -->

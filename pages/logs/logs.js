@@ -10,9 +10,15 @@ Page({
     fade_start:0,
     fade_list:[],
     live_start: 0,
+    fans_start: 0,
+    concern_start: 0,
     user_id: 0,
     my_id: 0,
     live_list: [],
+    fans_list: [],
+    concern_list: [],
+    concern_finish: false,
+    fans_finish: false,
     live_finish: false,
     fade_finish: false,
     showView: "0",
@@ -25,7 +31,7 @@ Page({
       fadeuserInfo: app.globalData.fadeuserInfo
     })
     var that = this;
-    this.getPersonPage(this.data.user_id, app.globalData.fadeuserInfo.user_id);
+    util.getPersonPage(this, app, this.data.user_id, app.globalData.fadeuserInfo.user_id);
   },
 
   //从详情页跳转回来
@@ -40,15 +46,15 @@ Page({
       } else {
         this.data.fade_list[index] = app.globalData.detail_item;
         this.setData({
-          live_list: this.data.fade_list
+          fade_list: this.data.fade_list
         })
       }
-    }
+    } 
     app.globalData.detail_item_index = -1;
   },
 
   onPullDownRefresh:function(){
-    this.getPersonPage(this.data.user_id, app.globalData.fadeuserInfo.user_id);
+    util.getPersonPage(this, app, this.data.user_id, app.globalData.fadeuserInfo.user_id);
   },
 
   onReachBottom: function() {
@@ -56,11 +62,19 @@ Page({
     switch (this.data.showView) {
       case "0":
         if(this.data.live_finish == false)
-          this.getLiveNote(this.data.user_id, app.globalData.fadeuserInfo.user_id, this.data.live_start, "push");
+          util.getLiveNote(this, app, this.data.user_id, app.globalData.fadeuserInfo.user_id, this.data.live_start, "push");
         break;
       case "1":
         if(this.data.fade_finish == false)
-          this.getMyNote(this.data.user_id, this.data.fade_start, "push");
+          util.getMyNote(this, app, this.data.user_id, this.data.fade_start, "push");
+        break;
+      case "2":
+        if (this.data.fans_finish == false)
+          util.getFans(this, app, this.data.user_id, this.data.fans_start, "push");
+        break;
+      case "3":
+        if (this.data.concern_finish == false)
+          util.getConcerns(this, app, this.data.user_id, this.data.concern_start, "push");
         break;
     }
   },
@@ -75,19 +89,37 @@ Page({
         case "0":
           if (this.data.live_list.length == 0) {
             //首次获取live_list
-            this.getLiveNote(this.data.user_id, app.globalData.fadeuserInfo.user_id, 0, "push");
+            util.getLiveNote(this, app, this.data.user_id, app.globalData.fadeuserInfo.user_id, 0, "push");
           } else {
             //更新Live
-            this.getLiveNote(this.data.user_id, app.globalData.fadeuserInfo.user_id, 0, "unshift");
+            util.getLiveNote(this, app, this.data.user_id, app.globalData.fadeuserInfo.user_id, 0, "unshift");
           }
           break;
         case "1":
           if(this.data.fade_list.length == 0) {
             //首次获取fade
-            this.getMyNote(this.data.user_id, 0, "push");
+            util.getMyNote(this, app, this.data.user_id, 0, "push");
           } else {
             //更新fade看看有没有新增的
-            this.getMyNote(this.data.user_id, 0, "unshift");
+            util.getMyNote(this, app, this.data.user_id, 0, "unshift");
+          }
+          break;
+        case "2":
+          if(this.data.fans_list.length == 0) {
+            //首次获取fans
+            util.getFans(this, app, this.data.user_id, 0, "push");
+          } else {
+            //更新fade看看有没有新增的
+            util.getFans(this, app, this.data.user_id, 0, "unshift");
+          }
+          break;
+        case "3":
+          if (this.data.concern_list.length == 0) {
+            //首次获取fans
+            util.getConcerns(this, app, this.data.user_id, 0, "push");
+          } else {
+            //更新fade看看有没有新增的
+            util.getConcerns(this, app, this.data.user_id, 0, "unshift");
           }
           break;
       }
@@ -155,158 +187,45 @@ Page({
     })
   },
 
-  //获取刷新个人信息
-  getPersonPage: function(user_id, my_id) {
-    var that = this;
-    wx.request({
-      url: app.globalData.baseUrl + 'getPersonPage/' + user_id + '/' + my_id,
-      method: 'GET',
-      header: {
-        "tokenModel": JSON.stringify(app.globalData.tokenModal)
-      },
-      success: function (res) {
-        console.log(res.data);
-        that.data.live_list = [];
-        for (var i = 0; i < res.data.query.list.length; i++) {
-          util.addInformation(i, res.data.query.list, that.data.live_list, app.globalData.windowWidth, "push");
-        }
-        that.setData({
-          fadeuserInfo: res.data.user,
-          live_list: that.data.live_list,
-          live_start: res.data.query.start
-        })
-      },
-      error: function (err) {
-        console.log(err);
-      }
-    })
-  },
-
-  //获取动态
-  getLiveNote: function(user_id, my_id, start, mark) {
-    var that = this;
-    wx.request({
-      url: app.globalData.baseUrl + 'getLiveNote/' + user_id + '/' + my_id + '/' + start,
-      method: 'GET',
-      header: {
-        "tokenModel": JSON.stringify(app.globalData.tokenModal)
-      },
-      success: function (res) {
-        console.log(res.data);
-        if(mark == 'unshift') {
-          util.cutArray(that.data.live_list, res.data.list); //查重
-          for (var i = res.data.list.length-1; i >= 0; --i) {
-            util.addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "unshift");
-          }
-        } else {
-          for (var i = 0; i < res.data.list.length; ++i) {
-            util.addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "push");
-          }
-        }        
-        that.setData({
-          live_start: (mark == 'push' && res.data.list.length >= 10) ? res.data.start : that.data.live_start,
-          live_list: that.data.live_list,
-          live_finish: res.data.list.length >= 10 ? false : true
-        })
-      },
-      error: function (err) {
-        console.log(err);
-      }
-    })
-  },
-
-  //获取自己原创fade
-  getMyNote: function(user_id, start, mark) {
-    var that = this;
-    wx.request({
-      url: app.globalData.baseUrl + 'getMyNote/' + user_id +  '/' + start,
-      method: 'GET',
-      header: {
-        "tokenModel": JSON.stringify(app.globalData.tokenModal)
-      },
-      success: function (res) {
-        console.log(res.data);
-        if (mark == 'unshift') {
-          util.cutArray(that.data.fade_list, res.data.list); //查重
-          for (var i = res.data.list.length - 1; i >= 0; --i) {
-            util.addInformation(i, res.data.list, that.data.fade_list, app.globalData.windowWidth, "unshift");
-          }
-        } else {
-          for (var i = 0; i < res.data.list.length; ++i) {
-            util.addInformation(i, res.data.list, that.data.fade_list, app.globalData.windowWidth, "push");
-          }
-        }
-        that.setData({
-          fade_start: mark == 'push'  ? res.data.start : that.data.fade_start,
-          fade_list: that.data.fade_list,
-          fade_finish: res.data.list.length >= 10 ? false: true
-        })
-      },
-      error: function (err) {
-        console.log(err);
-      }
-    })
-  },
-
   changeSecond: function (event) {
-    var type_ = event.target.dataset.type;
-    var list_name = event.target.dataset.list;
-    var note_id = event.target.dataset.pos;
-    if(list_name == 'fade') {
-      for (var i = 0; i < this.data.fade_list.length; i++) {
-        if (this.data.fade_list[i].note_id == note_id) {
-          this.data.fade_list[i].action = type_;
-          break;
-        }
+    util.changeSecond(this, app, event);
+  },
+
+  //点击关注按钮
+  clickConcernBtn: function(event) {
+    var concern = event.target.dataset.concern; //0为未关注
+    var star_id = event.currentTarget.dataset.userid;
+
+    if(concern == 0) {
+      for(var i = 0; i < this.data.fans_list.length; ++i) {
+        if(this.data.fans_list[i].user_id == star_id) break;
       }
-    } else {
-      for (var i = 0; i < this.data.live_list.length; i++) {
-        if (this.data.live_list[i].note_id == note_id) {
-          this.data.live_list[i].action = type_;
-          break;
+      // util.concern(this, this.data.user_id, star_id);
+      var that = this;
+      wx.request({
+        url: app.globalData.baseUrl + "concern",
+        method: "POST",
+        header: {
+          "tokenModel": JSON.stringify(app.globalData.tokenModal),
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          fans_id: app.globalData.fadeuserInfo.user_id,
+          star_id: star_id
+        },
+        success: function (res) {
+          console.log(res);
+          if(res.data.success) {
+            that.data.fans_list[i].isConcern = 1;
+            that.setData({
+              fans_list: that.data.fans_list
+            })
+          }
+        },
+        error: function (err) {
+          console.log(err);
         }
-      }
+      })
     }
-    this.setData({
-      live_list: this.data.live_list,
-      fade_list: this.data.fade_list
-    })
-    var that = this;
-    var temp_obj = {
-      user_id: app.globalData.fadeuserInfo.user_id,
-      nickname: app.globalData.fadeuserInfo.nickname,
-      head_image_url: app.globalData.fadeuserInfo.head_image_url,
-      "type": list_name == "fade" ? that.data.fade_list[i].action : that.data.live_list[i].action,
-      target_id: list_name == "fade" ? that.data.fade_list[i].note_id : that.data.live_list[i].note_id
-    }
-    wx.request({
-      url: app.globalData.baseUrl + "changeSecond",
-      method: "POST",
-      header: {
-        "tokenModel": JSON.stringify(app.globalData.tokenModal),
-        "Content-type": "application/x-www-form-urlencoded"
-      },
-      data: {
-        note: JSON.stringify(temp_obj)
-      },
-      success: function (res2) {
-        console.log(res2.data);
-        var temp = list_name == "fade" ? that.data.fade_list[i] : that.data.live_list[i], 
-            data1 = res2.data;
-        if (res2.data.err != undefined) {
-          console.log("changeSecond fail");
-        } else {
-          console.log("changeSecond success");
-          util.updateTime(temp, res2.data.extra, res2.data.extra);
-          that.setData({
-            fade_list: that.data.fade_list,
-            live_list: that.data.live_list
-          })
-        }
-      },
-      fail: function () {
-        console.log("connect fail");
-      }
-    })
   }
 })

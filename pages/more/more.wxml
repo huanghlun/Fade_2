@@ -1,0 +1,28 @@
+<!--pages/more/more.wxml-->
+<view class='hd_line flex flex-align-center'>
+  <view class='hd_item flex-none {{type == 1 ? "hd_item_selected" : ""}}' bindtap='switchView' data-type='1'>加秒</view>
+  <view class='flex-none' style='width: 6rpx; height: 32rpx; background-color:#e6e6e6;'></view>
+  <view class='hd_item flex-none {{type == 2 ? "hd_item_selected" : ""}}' bindtap='switchView' data-type='2'>减秒</view>
+</view>
+
+<block wx:for="{{addList}}" wx:for-item="user_item" wx:key="user_id">
+  <view class='notice_item flex flex-align-center' hidden='{{type != 1}}'>
+    <view class="imgContainer">
+      <image src="{{baseUrl + user_item.head_image_url}}" class="avatar"></image>
+    </view>
+    <view class='info_flex_item info_name'>{{user_item.nickname}}</view>
+    <view class="info_flex_item info_state flex-1">续了一秒</view>
+    <view class="comment_time flex-none">{{user_item.post_time}}</view>
+  </view>
+</block>
+
+<block wx:for="{{minusList}}" wx:for-item="item" wx:key="user_id">
+  <view class='notice_item flex flex-align-center' hidden='{{type != 2}}'>
+    <view class="imgContainer">
+      <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
+    </view>
+    <view class='info_flex_item info_name'>{{item.nickname}}</view>
+    <view class="info_flex_item info_state flex-1">减了一秒</view>
+    <view class="comment_time flex-none">{{item.post_time}}</view>
+  </view>
+</block>

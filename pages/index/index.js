@@ -58,8 +58,8 @@ Page({
         information_list: this.data.information_list
       })
       console.log(this.data.information_list[index]);
+      app.globalData.detail_item_index = -1;
     }
-    app.globalData.detail_item_index = -1;
 
     if(app.globalData.post_item != null) {
       var temp_array = [];
@@ -240,7 +240,7 @@ Page({
           console.log("changeSecond success");
           util.updateTime(that.data.information_list[i], res2.data.extra, res2.data.extra);
           that.setData({
-            information_list: that.data.information_list
+            information_list : that.data.information_list
           })
         }
       },

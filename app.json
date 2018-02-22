@@ -9,7 +9,9 @@
     "pages/detail/detail",
     "pages/post/post",
     "pages/temp/temp",
-    "pages/others/others"
+    "pages/others/others",
+    "pages/more/more",
+    "pages/search/search"
   ],
   "window":{
     "backgroundTextStyle":"dark",
@@ -39,7 +41,7 @@
         "selectedIconPath": "image/icon/post.png"
       },
       {
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/search/search",
         "iconPath": "image/icon/search_origin.png",
         "selectedIconPath": "image/icon/search.png"
       },

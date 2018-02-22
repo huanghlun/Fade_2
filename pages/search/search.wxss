@@ -1,0 +1,19 @@
+/* pages/search/search.wxss */
+.search_selected {
+  color: #29abe2;
+}
+
+.title_text {
+  color: #7f7f7f;
+  font-size: 28rpx;
+  padding: 16.67rpx 0px;
+  margin: 0px 33.33rpx;
+  border-bottom: #efefef 2rpx solid;
+}
+
+.divide_text {
+  color: #333;
+  text-align: center;
+  font-size: 32rpx;
+  padding: 40rpx 0px 16rpx;
+}

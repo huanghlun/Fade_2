@@ -1,10 +1,10 @@
 <!--pages/noticeDetail/noticeDetail.wxml-->
 <block wx:for="{{addProgressList}}" wx:for-item="progress_item" wx:key="note_id">
-  <view class='notice_item flex flex-align-center'>
-    <view class="imgContainer">
+  <view class='notice_item flex flex-align-center' bindtap='navigateToDetail' data-pos="{{progress_item.note_id}}">
+    <view class="imgContainer" catchtap='navigateToOther' data-userid='{{progress_item.user_id}}'>
       <image src="{{baseUrl + progress_item.head_image_url}}" class="avatar"></image>
     </view>
-    <view class='info_flex_item info_name'>{{progress_item.nickname}}</view>
+    <view class='info_flex_item info_name' catchtap='navigateToOther' data-userid='{{progress_item.user_id}}'>{{progress_item.nickname}}</view>
     <view class="info_flex_item info_state" wx:if="{{progress_item.type == 1}}">续了一秒</view>
     <view class="info_flex_item info_state" wx:if="{{progress_item.type == 2}}">减了一秒</view>
     <view class='info_flex_item_span'>
@@ -20,7 +20,7 @@
 </block>
 
 <block wx:for="{{addFansList}}" wx:for-item="fans_item" wx:key="user_id">
-  <view class='notice_item flex flex-align-center'>
+  <view class='notice_item flex flex-align-center' bindtap='navigateToOther' data-userid="{{fans_item.user_id}}">
     <view class="imgContainer">
       <image src="{{baseUrl + fans_item.head_image_url}}" class="avatar"></image>
     </view>
@@ -28,25 +28,25 @@
       <view class='notice_item_content_hd'>
         {{fans_item.nickname}}<text style='font-weight: normal;' class='info_state'>关注了你</text>
       </view>
-      <view class='notice_item_content info_state'>{{fans_item.summary || "他/她没有设置个性签名"}}</view>
+      <view class='notice_item_content info_state' style='margin-left:0px;'>{{fans_item.summary || "他/她没有设置个性签名"}}</view>
     </view>
-    <view class='concern_btn flex-none' style="background-color : {{fans_item.isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}">
-       <text style='color:white;' wx:if="{{fans_item.isConcern == 0}}">关注</text>  
-        <text style='color:rgb(41, 171, 226);' wx:if="{{fans_item.isConcern == 1}}">已关注</text>  
+    <view class='concern_btn flex-none' style="background-color : {{fans_item.isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}" catchtap='clickConcernBtn' data-userid="{{fans_item.user_id}}">
+       <text style='color:white;' wx:if="{{fans_item.isConcern == 0}}" data-concern="0">关注</text>  
+        <text style='color:rgb(41, 171, 226);' wx:if="{{fans_item.isConcern == 1}}" data-concern="1">已关注</text>  
     </view>
   </view>
 </block>
 
 <block wx:for="{{addCommentList}}" wx:for-item="comment_item" wx:key="comment_id">
-  <view class='notice_item'>
+  <view class='notice_item' bindtap='navigateToDetail' data-pos="{{comment_item.comment_id}}">
     <view class='flex flex-align-center'>
       <view class="imgContainer">
-        <image src="{{baseUrl + comment_item.head_image_url}}" class="avatar"></image>
+        <image src="{{baseUrl + comment_item.from_head}}" class="avatar"></image>
       </view>
-      <view class="info_flex_item info_name {{comment_item.to_user_id != user_id ? 'flex-1' : 'flex-none'}}">{{comment_item.nickname}}</view>
-      <view class="info_flex_item info_state flex-1" wx:if="{{comment_item.second_id}}">回复了你</view>
+      <view class="info_flex_item info_name {{comment_item.to_id != user_id ? 'flex-1' : 'flex-none'}}">{{comment_item.from_nickname}}</view>
+      <view class="info_flex_item info_state flex-1" wx:if="{{comment_item.to_id == user_id}}">回复了你</view>
       <view class='item_img_container'>
-        <image wx:if="{{comment_item.exampleImage}}" src="baseUrl + comment_item.exampleImage" class='item_img' mode='aspectFill'></image> 
+        <image wx:if="{{comment_item.exampleImage}}" src="{{baseUrl + comment_item.exampleImage}}" class='item_img' mode='aspectFill'></image> 
          <text wx:if="{{comment_item.exampleImage == undefined}}" class='item_text'>{{comment_item.comment_content[0]}}</text>  
       </view>
     </view>

@@ -105,6 +105,37 @@ Page({
     }
   },
 
+  navigateToDetail: function(event) {
+    for (var i = 0; i < this.data.addProgressList.length; i++) {
+      if (this.data.addProgressList[i].note_id == event.currentTarget.dataset.pos) {
+        app.globalData.detail_item = this.data.addProgressList[i];
+        break;
+      }
+    }
+    for (var i = 0; i < this.data.addCommentList.length; i++) {
+      if (this.data.addCommentList[i].comment_id == event.currentTarget.dataset.pos) {
+        app.globalData.detail_item = this.data.addCommentList[i];
+        break;
+      }
+    }
+    console.log(app.globalData.detail_item);
+    wx.navigateTo({
+      url: '../detail/detail?type=1'
+    });
+  },
+
+  navigateToOther: function(event) {
+    if (event.currentTarget.dataset.userid == app.globalData.fadeuserInfo.user_id) {
+      wx.switchTab({
+        url: '../logs/logs'
+      })
+    } else {
+      wx.navigateTo({
+        url: '../others/others?user_id=' + event.currentTarget.dataset.userid
+      })
+    } 
+  },
+
   //点击加载更多信息的按钮
   clickBtn: function() {
     switch (this.data.query) {
@@ -293,5 +324,43 @@ Page({
         console.log(err);
       }
     })
+  },
+
+  //点击关注按钮
+  clickConcernBtn: function (event) {
+    var concern = event.target.dataset.concern; //0为未关注
+    var star_id = event.currentTarget.dataset.userid;
+
+    if (concern == 0) {
+      for (var i = 0; i < this.data.addFansList.length; ++i) {
+        if (this.data.addFansList[i].user_id == star_id) break;
+      }
+      // util.concern(this, this.data.user_id, star_id);
+      var that = this;
+      wx.request({
+        url: app.globalData.baseUrl + "concern",
+        method: "POST",
+        header: {
+          "tokenModel": JSON.stringify(app.globalData.tokenModal),
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          fans_id: app.globalData.fadeuserInfo.user_id,
+          star_id: star_id
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.data.success) {
+            that.data.addFansList[i].isConcern = 1;
+            that.setData({
+              addFansList: that.data.addFansList
+            })
+          }
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      })
+    }
   }
 })

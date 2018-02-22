@@ -53,7 +53,7 @@ Page({
                     }
                     else {
                       console.log(res1)
-                      wx.setStorageSync("user_openid", res1.data.wechat_id);
+                      wx.setStorageSync("user_openid", res1.data.user.wechat_id);
                       app.globalData.fadeuserInfo = res1.data.user;
                       app.globalData.tokenModal = res1.data.user.tokenModel;
                       //打开websocket及发送上线请求

@@ -21,7 +21,7 @@ function formatNumber(n) {
 }
 
 //添加新帖子
-function addInformation(a, array, information_list, windowWidth, mark) {
+function addInformation(a, array, information_list, windowWidth, mark, search_size) {
   var temp = array[a];
   var time_life;
   if(temp.type != 0) {
@@ -32,41 +32,68 @@ function addInformation(a, array, information_list, windowWidth, mark) {
   }
   temp.life = time_life.life_str;
   temp.progress_len = time_life.progress_len;
-  if (temp.images != undefined && temp.images.length > 0) {
-    temp.show_width = windowWidth;
-    if(temp.images[0].image_cut_size == 1) { //长图(即小于15:8)，以4:5进行裁剪
-      temp.show_height = parseFloat(windowWidth * 1.25);
-    } else { //宽图
-      temp.show_height = parseFloat(temp.show_width * 8 / 15);
-    }
 
-    for(var i = 0; i < temp.images.length; i++) {
-      if (temp.images[i].image_size <= 1) { //长图
-        temp.images[i].real_width = temp.show_width;
-        temp.images[i].real_height = parseFloat(temp.images[i].real_width / temp.images[i].image_size);
-        if(temp.images[i].image_size > 0.8) {
-          temp.images[i].real_width *= parseFloat(temp.images[i].image_size / 0.8);
-          temp.images[i].real_height *= parseFloat(temp.images[i].image_size / 0.8);
-        }
-        
-      } else { //宽图
-        temp.images[i].real_height = temp.show_height;
-        temp.images[i].real_width = parseFloat(temp.images[i].real_height * temp.images[i].image_size);
-        if (temp.images[i].image_size < 1.875) {
-          temp.images[i].real_width *= parseFloat(1.875/temp.images[i].image_size);
-          temp.images[i].real_height *= parseFloat(1.875/temp.images[i].image_size);
-        }
-      }
-      temp.images[i].coordinate = {
-        x: parseFloat(temp.images[i].real_width * parseFloat(temp.images[i].image_coordinate.split(":")[0]) / 1000),
-        y: parseFloat(temp.images[i].real_height * parseFloat(temp.images[i].image_coordinate.split(":")[1]) / 1000)
-      }
-    }
-  }
+  //调整图片
+  adjustImage(temp, windowWidth, search_size);
   if(mark == "push")
     information_list.push(temp);
   else 
     information_list.unshift(temp);
+}
+
+//调整图片尺寸
+function adjustImage(temp, windowWidth, search_size) {
+  if (temp.images != undefined && temp.images.length > 0) {
+    if (search_size == undefined) { //非搜索页显示
+      temp.show_width = windowWidth;
+      if (temp.images[0].image_cut_size == 1) { //长图(即小于15:8)，以4:5进行裁剪
+        temp.show_height = parseFloat(windowWidth * 1.25);
+      } else { //宽图
+        temp.show_height = parseFloat(temp.show_width * 8 / 15);
+      }
+
+      for (var i = 0; i < temp.images.length; i++) {
+        if (temp.images[i].image_size <= 1) { //长图
+          temp.images[i].real_width = temp.show_width;
+          temp.images[i].real_height = parseFloat(temp.images[i].real_width / temp.images[i].image_size);
+          if (temp.images[i].image_size > 0.8) {
+            temp.images[i].real_width *= parseFloat(temp.images[i].image_size / 0.8);
+            temp.images[i].real_height *= parseFloat(temp.images[i].image_size / 0.8);
+          }
+
+        } else { //宽图
+          temp.images[i].real_height = temp.show_height;
+          temp.images[i].real_width = parseFloat(temp.images[i].real_height * temp.images[i].image_size);
+          if (temp.images[i].image_size < 1.875) {
+            temp.images[i].real_width *= parseFloat(1.875 / temp.images[i].image_size);
+            temp.images[i].real_height *= parseFloat(1.875 / temp.images[i].image_size);
+          }
+        }
+        temp.images[i].coordinate = {
+          x: parseFloat(temp.images[i].real_width * parseFloat(temp.images[i].image_coordinate.split(":")[0]) / 1000),
+          y: parseFloat(temp.images[i].real_height * parseFloat(temp.images[i].image_coordinate.split(":")[1]) / 1000)
+        }
+      }
+    } else { //搜索页显示
+      temp.show_width = windowWidth;
+      temp.show_height = windowWidth / search_size;
+      if (temp.images[0].image_size >= search_size) { //宽图
+        temp.images[0].real_height = temp.show_height;
+        temp.images[0].real_width = temp.images[0].real_height * temp.images[0].image_size;
+        temp.images[0].coordinate = {
+          x: parseFloat((temp.images[0].real_width - temp.show_width) / 2),
+          y: 0
+        }
+      } else { //长图
+        temp.images[0].real_width = temp.show_width;
+        temp.images[0].real_height = temp.images[0].real_width / temp.images[0].image_size;
+        temp.images[0].coordinate = {
+          x: 0,
+          y: parseFloat((temp.images[0].real_height - temp.show_height) / 2)
+        }
+      }
+    }
+  }
 }
 
 //更新帖子
@@ -131,6 +158,15 @@ function CompareDay(time_2) {
   }
 }
 
+//比较年份
+function CompareYear(time_2) {
+  var time_1 = new Date();
+  if(time_1.getFullYear() == time_2.getFullYear()) { //同一年
+    return 1;
+  }
+  return 0;
+}
+
 //优化时间表示
 function advanceDay(time_) {
   var time = formatDate(time_);
@@ -141,7 +177,11 @@ function advanceDay(time_) {
   } else if (compare_result == -1) {
     time = "昨天 " + time_split[1].split(":")[0] + ":" + time_split[1].split(":")[1];
   } else {
-    time = time_;
+    if(CompareYear(time)) {
+      time = time_split[0].split("-")[1] + "-" + time_split[0].split("-")[2] + " " + time_split[1].split(":")[0] + ":" + time_split[1].split(":")[1];
+    } else {
+      time = time_split[0] + " " + time_split[1].split(":")[0] + ":" + time_split[1].split(":")[1];
+    }
   }
   return time;
 }
@@ -249,16 +289,232 @@ function cutArray(arr1, arr2) { //arr2被减
   }
 }
 
+//获取刷新个人信息
+function getPersonPage(that, app, user_id, my_id) {
+  wx.request({
+    url: app.globalData.baseUrl + 'getPersonPage/' + user_id + '/' + my_id,
+    method: 'GET',
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal)
+    },
+    success: function (res) {
+      console.log(res.data);
+      that.data.live_list = [];
+      for (var i = 0; i < res.data.query.list.length; i++) {
+        addInformation(i, res.data.query.list, that.data.live_list, app.globalData.windowWidth, "push");
+      }
+      that.setData({
+        isConcern: res.data.isConcern,
+        fadeuserInfo: res.data.user,
+        live_list: that.data.live_list,
+        live_start: res.data.query.start
+      })
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
+//获取动态
+function getLiveNote(that, app, user_id, my_id, start, mark) {
+  wx.request({
+    url: app.globalData.baseUrl + 'getLiveNote/' + user_id + '/' + my_id + '/' + start,
+    method: 'GET',
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal)
+    },
+    success: function (res) {
+      console.log(res.data);
+      if (mark == 'unshift') {
+        cutArray(that.data.live_list, res.data.list); //查重
+        for (var i = res.data.list.length - 1; i >= 0; --i) {
+          addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "unshift");
+        }
+      } else {
+        for (var i = 0; i < res.data.list.length; ++i) {
+          addInformation(i, res.data.list, that.data.live_list, app.globalData.windowWidth, "push");
+        }
+      }
+      that.setData({
+        live_start: (mark == 'push' && res.data.list.length >= 10) ? res.data.start : that.data.live_start,
+        live_list: that.data.live_list,
+        live_finish: res.data.list.length >= 10 ? false : true
+      })
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
+//获取自己原创fade
+function getMyNote(that, app, user_id, start, mark) {
+  wx.request({
+    url: app.globalData.baseUrl + 'getMyNote/' + user_id + '/' + start,
+    method: 'GET',
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal)
+    },
+    success: function (res) {
+      console.log(res.data);
+      if (mark == 'unshift') {
+        cutArray(that.data.fade_list, res.data.list); //查重
+        for (var i = res.data.list.length - 1; i >= 0; --i) {
+          addInformation(i, res.data.list, that.data.fade_list, app.globalData.windowWidth, "unshift");
+        }
+      } else {
+        for (var i = 0; i < res.data.list.length; ++i) {
+          addInformation(i, res.data.list, that.data.fade_list, app.globalData.windowWidth, "push");
+        }
+      }
+      that.setData({
+        fade_start: mark == 'push' ? res.data.start : that.data.fade_start,
+        fade_list: that.data.fade_list,
+        fade_finish: res.data.list.length >= 10 ? false : true
+      })
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
+//获取粉丝
+function getFans(that, app, user_id, start, mark) {
+  wx.request({
+    url: app.globalData.baseUrl + 'getFans/' + user_id + '/' + start,
+    method: 'GET',
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal)
+    },
+    success: function (res) {
+      console.log(res.data);
+      if (mark == 'unshift') {
+        cutArray(that.data.fans_list, res.data.list); //查重
+        that.data.fans_list.unshift.apply(that.data.fans_list, res.data.list);
+      } else {
+        that.data.fans_list.push.apply(that.data.fans_list, res.data.list);
+      }
+      that.setData({
+        fans_start: mark == 'push' ? res.data.start : that.data.fans_start,
+        fans_list: that.data.fans_list,
+        fans_finish: res.data.list.length >= 20 ? false : true
+      })
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
+//获取关注
+function getConcerns(that, app, user_id, start, mark) {
+  wx.request({
+    url: app.globalData.baseUrl + 'getConcerns/' + user_id + '/' + start,
+    method: 'GET',
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal)
+    },
+    success: function (res) {
+      console.log(res.data);
+      if (mark == 'unshift') {
+        cutArray(that.data.concern_list, res.data.list); //查重
+        that.data.concern_list.unshift.apply(that.data.concern_list, res.data.list);
+      } else {
+        that.data.concern_list.push.apply(that.data.concern_list, res.data.list);
+      }
+      that.setData({
+        concern_start: mark == 'push' ? res.data.start : that.data.concern_start,
+        concern_list: that.data.fans_list,
+        concern_finish: res.data.list.length >= 20 ? false : true
+      })
+    },
+    error: function (err) {
+      console.log(err);
+    }
+  })
+}
+
+//个人页点赞
+function changeSecond(that, app, event) {
+  var type_ = event.target.dataset.type;
+  var list_name = event.target.dataset.list;
+  var note_id = event.target.dataset.pos;
+  if (list_name == 'fade') {
+    for (var i = 0; i < that.data.fade_list.length; i++) {
+      if (that.data.fade_list[i].note_id == note_id) {
+        that.data.fade_list[i].action = type_;
+        break;
+      }
+    }
+  } else {
+    for (var i = 0; i < that.data.live_list.length; i++) {
+      if (that.data.live_list[i].note_id == note_id) {
+        that.data.live_list[i].action = type_;
+        break;
+      }
+    }
+  }
+  that.setData({
+    live_list: that.data.live_list,
+    fade_list: that.data.fade_list
+  })
+  var temp_obj = {
+    user_id: app.globalData.fadeuserInfo.user_id,
+    nickname: app.globalData.fadeuserInfo.nickname,
+    head_image_url: app.globalData.fadeuserInfo.head_image_url,
+    "type": list_name == "fade" ? that.data.fade_list[i].action : that.data.live_list[i].action,
+    target_id: list_name == "fade" ? that.data.fade_list[i].note_id : that.data.live_list[i].note_id
+  }
+  wx.request({
+    url: app.globalData.baseUrl + "changeSecond",
+    method: "POST",
+    header: {
+      "tokenModel": JSON.stringify(app.globalData.tokenModal),
+      "Content-type": "application/x-www-form-urlencoded"
+    },
+    data: {
+      note: JSON.stringify(temp_obj)
+    },
+    success: function (res2) {
+      console.log(res2.data);
+      var temp = list_name == "fade" ? that.data.fade_list[i] : that.data.live_list[i],
+        data1 = res2.data;
+      if (res2.data.err != undefined) {
+        console.log("changeSecond fail");
+      } else {
+        console.log("changeSecond success");
+        updateTime(temp, res2.data.extra, res2.data.extra);
+        that.setData({
+          fade_list: that.data.fade_list,
+          live_list: that.data.live_list
+        })
+      }
+    },
+    fail: function () {
+      console.log("connect fail");
+    }
+  })
+}
+
 module.exports = {
   formatTime: formatTime,
   CalPhotoHeight: CalPhotoHeight,
   updateInformation: updateInformation,
   updateTime : updateTime,
+  adjustImage: adjustImage,
   addInformation: addInformation,
   calLeftTime: calLeftTime,
   json2Form: json2Form,
   noteIfDie: noteIfDie,
   advanceDay: advanceDay,
   formatDate: formatDate,
-  cutArray: cutArray
+  cutArray: cutArray,
+  getPersonPage: getPersonPage,
+  getLiveNote: getLiveNote,
+  getMyNote: getMyNote,
+  getFans: getFans,
+  getConcerns: getConcerns,
+  changeSecond: changeSecond
 }

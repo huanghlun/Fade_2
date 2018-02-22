@@ -1,0 +1,162 @@
+<!--pages/search/search.wxml-->
+<view class="weui-search-bar" style='background-color: white; border-style: none;'>
+  <view class="weui-search-bar__form" style='border-radius: 18rpx; background: #efeff4 !important;'>
+      <view class="weui-search-bar__box" style='border-radius: 18rpx;'>
+          <icon class="weui-icon-search_in-box" type="search" size="12"></icon>
+          <input type="text" class="weui-search-bar__input" placeholder="搜索Fade、用户" focus="{{inputShowed}}" bindfocus='showInput' bindinput="inputTyping"  value="{{inputVal}}" style='background-color: #efeff4;' bindconfirm='confirmSearch' confirm-type='search'/>
+          <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+              <icon type="clear" size="12"></icon>
+          </view>
+      </view>
+      <!-- <label class="weui-search-bar__label" hidden="{{inputShowed}}" bindtap="showInput" style='text-align: left;'>
+          <icon class="weui-icon-search" type="search" size="12"></icon>
+          <view class="weui-search-bar__text">搜索Fade、用户</view>
+      </label> -->
+  </view>
+  <view class="weui-search-bar__cancel-btn" hidden="{{!inputShowed}}" bindtap="hideInput" style='font-size: 32rpx; color: #29abe2;'>取消</view>
+</view> 
+<!-- <view class="weui-cells searchbar-result" wx:if="{{inputVal.length > 0}}">
+  <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+      <view class="weui-cell__bd">
+          <view>实时搜索文本</view>
+      </view>
+  </navigator>
+  <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+      <view class="weui-cell__bd">
+          <view>实时搜索文本</view>
+      </view>
+  </navigator>
+  <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+      <view class="weui-cell__bd">
+          <view>实时搜索文本</view>
+      </view>
+  </navigator>
+  <navigator url="" class="weui-cell" hover-class="weui-cell_active">
+      <view class="weui-cell__bd">
+          <view>实时搜索文本</view>
+      </view>
+  </navigator>
+</view> -->
+
+<view class='hd_line flex flex-align-center' style='font-weight: normal;'>
+  <view class='hd_item flex-none {{type == 1 ? "hd_item_selected" : ""}}' bindtap='switchView' data-type='1' style='border-bottom-width: 2rpx;'>用户</view>
+  <view class='flex-none' style='width: 2rpx; height: 32rpx; background-color:#e6e6e6;'></view>
+  <view class='hd_item flex-none {{type == 2 ? "hd_item_selected" : ""}}' bindtap='switchView' data-type='2' style='border-bottom-width: 2rpx;'>Fade</view>
+</view>
+
+<block wx:for="{{userList}}" wx:for-item="user_item" wx:key="user_id">
+  <view class='notice_item flex flex-align-center' hidden='{{type != 1}}' bindtap='navigateToOthers' data-userid="{{user_item.user_id}}">
+    <view class="imgContainer">
+      <image src="{{baseUrl + user_item.head_image_url}}" class="avatar"></image>
+    </view>
+     <view class='info_flex_item info_name'><rich-text nodes="{{user_item.nodes}}"></rich-text></view> 
+    <view class="info_flex_item info_state flex-1">{{user_item.fade_name}}</view>
+  </view>
+</block>
+
+<view class='title_text' hidden="{{(type != 2 || live_num <= 0) ? true : false}}">共{{live_num}}条内容</view>
+<block wx:for="{{liveList}}" wx:key="note_id">
+  <view class="information_container"  bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}" hidden="{{type != 2 ? true : false}}">
+    <view class='flex flex-align-end'>
+      <view class='flex-auto' style='font-size: 28rpx !important;'>
+        <view class="info_line">
+          <view class="imgContainer">
+            <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
+          </view>
+          <view class='info_flex_item info_name'>{{item.nickname}}</view>
+          <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
+          <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+          <view class='info_flex_item_span'>
+            <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+            <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+          </view>
+        </view>
+        <view class="content_line">
+          <view class="content_item">
+            <view class="orgin_item">
+                <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+                <view><rich-text nodes="{{item.nodes}}"></rich-text></view> 
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class='flex-none' style='overflow: hidden;'>
+        <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; overflow:hidden; border-radius: 16rpx; margin-right: 33.33rpx; margin-bottom: 16.67rpx;">
+          <image src="{{baseUrl + item.images[0].image_url}}" style="height: {{item.images[0].real_height}}px; width:{{item.images[0].real_width}}px; margin-top: -{{item.images[0].coordinate.y}}px; margin-left: -{{item.images[0].coordinate.x}}px"></image>
+        </view>  
+      </view>
+    </view>
+    <view class="interact_line" style='width: {{item.is_die==0 ? "200" : item.progress_len}}rpx'>
+      <view class='rest_time' wx:if="{{item.is_die == 1}}">剩余{{item.life}}</view>
+      <image src='../../image/icon/long.png' wx:if="{{item.is_die == 1}}" style='width:100%; height:50rpx; border-radius:36rpx;'></image>  
+      <view class='button_container'>
+        <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
+        <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">+1S</view>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">-1S</view>
+          <view class='comment_btn' wx:if="{{item.action != 0 || item.is_die == 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
+            评论
+            <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1 && item.is_die == 1}}"></image>
+            <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2 && item.is_die == 1}}"></image>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{item.is_die == 0}}" class='die_comment'>
+        流传了{{item.liveTime}}分钟
+      </view>
+    </view>
+  </view>
+</block>
+<view class='divide_text' hidden="{{(type != 2 || !liveFinish || tapMore) ? true : false}}" bindtap='getFadeList'>查看更多</view>
+<block wx:for="{{fadeList}}" wx:key="note_id">
+  <view class="information_container"  bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}" hidden="{{type != 2 ? true : false}}">
+    <view class='flex flex-align-end'>
+      <view class='flex-auto' style='font-size: 28rpx !important;'>
+        <view class="info_line">
+          <view class="imgContainer">
+            <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
+          </view>
+          <view class='info_flex_item info_name'>{{item.nickname}}</view>
+          <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
+          <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+          <view class='info_flex_item_span'>
+            <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+            <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
+          </view>
+        </view>
+        <view class="content_line">
+          <view class="content_item">
+            <view class="orgin_item">
+                <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+                <view><rich-text nodes="{{item.nodes}}"></rich-text></view> 
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class='flex-none' style='overflow: hidden;'>
+        <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; overflow:hidden; border-radius: 16rpx; margin-right: 33.33rpx; margin-bottom: 16.67rpx;">
+          <image src="{{baseUrl + item.images[0].image_url}}" style="height: {{item.images[0].real_height}}px; width:{{item.images[0].real_width}}px; margin-top: -{{item.images[0].coordinate.y}}px; margin-left: -{{item.images[0].coordinate.x}}px"></image>
+        </view>  
+      </view>
+    </view>
+    <view class="interact_line" style='width: {{item.is_die==0 ? "200" : item.progress_len}}rpx'>
+      <view class='rest_time' wx:if="{{item.is_die == 1}}">剩余{{item.life}}</view>
+      <image src='../../image/icon/long.png' wx:if="{{item.is_die == 1}}" style='width:100%; height:50rpx; border-radius:36rpx;'></image>  
+      <view class='button_container'>
+        <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
+        <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">+1S</view>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">-1S</view>
+          <view class='comment_btn' wx:if="{{item.action != 0 || item.is_die == 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
+            评论
+            <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1 && item.is_die == 1}}"></image>
+            <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2 && item.is_die == 1}}"></image>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{item.is_die == 0}}" class='die_comment'>
+        流传了{{item.liveTime}}分钟
+      </view>
+    </view>
+  </view>
+</block>

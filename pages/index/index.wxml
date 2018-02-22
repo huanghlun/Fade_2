@@ -9,13 +9,26 @@
   
   <block wx:for="{{information_list}}" wx:key="note_id">
     <view class="information_container {{item.is_die == 0 ? 'die_container' : ''}}" animation="{{item.is_die == 0 ? animationData : null}}" bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}">
-      <view class="info_line" catchtap='navigateToOthers' data-userid="{{item.user_id}}">
-        <view class="imgContainer">
+      <view class="info_line">
+        <view class="imgContainer" catchtap='navigateToOthers' data-userid="{{item.user_id}}">
           <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
         </view>
-        <view class='info_flex_item info_name'>{{item.nickname}}</view>
-        <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
-        <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+        <view class='info_flex_item info_name' wx:if="{{!item.addUsers}}" catchtap='navigateToOthers' data-userid="{{item.user_id}}">{{item.nickname}}</view>
+        <view class='info_flex_item info_name' wx:if="{{item.addUsers}}">
+          <block wx:for="{{item.addUsers.length > 3 ? item.addUsers.splice(0,3) : item.addUsers}}" wx:for-item="adduser" wx:key="user_id">
+            {{adduser.nickname}}
+          </block>
+        </view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">
+          <text wx:if="{{item.addUsers.length>3}}">等</text>
+          <text wx:if="{{item.addUsers.length>=2}}">{{item.relayUserNum}}人</text>
+          续了一秒
+        </view>
+        <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">
+          <text wx:if="{{item.addUsers.length>3}}">等</text>
+          <text wx:if="{{item.addUsers}}">{{item.relayUserNum}}人</text>
+          减了一秒
+        </view>
         <view class='info_flex_item_span'>
           <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
           <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
@@ -37,7 +50,7 @@
               <view class="author_item" wx:if="{{item.target_id != 0}}" catchtap='navigateToOthers' data-userid="{{item.origin.user_id}}">@{{item.origin.nickname}}</view>
               <view>{{item.note_content || item.origin.note_content}}</view> 
           </view>
-          <view class="pos_item">广州·大学城</view>
+          <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>
           <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
         </view>
       </view>

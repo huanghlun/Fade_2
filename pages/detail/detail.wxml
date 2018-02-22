@@ -1,6 +1,6 @@
 <!--pages/detail/detail.wxml-->
 <scroll-view class="information_container" data-pos="{{item.note_id}}" data-img="{{item.images}}" style='height: {{windowHeight}}px' lower-threshold="1" scroll-top="{{scrollTop}}" scroll-into-view="{{scrollIntoView}}" enable-back-to-top="true" scroll-y="true" bindscrolltolower="scrollToLow">
-   <view class="info_line">
+   <view class="info_line" catchtap='navigateToOthers'>
      <view class="imgContainer">
       <image src="{{baseUrl+item.head_image_url}}" class="avatar"></image>
     </view> 
@@ -16,10 +16,10 @@
     </view>
   </view> 
   <view class="content_line">
-    <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
+    <view hidden="{{item.images.length <= 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
       <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
         <swiper-item wx:for="{{item.images}}" wx:for-item="img_item" wx:key="{{image_id}}">
-          <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.note_id}}"></image>
+          <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto"></image>
         </swiper-item>
       </swiper> 
     </view>  
@@ -28,7 +28,7 @@
           <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
           <view>{{item.note_content || item.origin.note_content}}</view> 
       </view>
-      <view class="pos_item">广州·大学城</view>
+      <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>
       <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
     </view>
   </view>
@@ -74,12 +74,12 @@
       <image src='../../image/icon/add.png' class='xumiao_state' wx:if="{{xumiao_item.type == 1}}"></image>
       <image src='../../image/icon/sub.png' class='xumiao_state' wx:if="{{xumiao_item.type == 2}}"></image>
     </view>
-    <view class='xumiao_line_ft'>More</view>
+    <view class='xumiao_line_ft' catchtap='navigateToMore'>More</view>
   </view>
   <view class="comment_container">
     <view class='comment_hd' id='comment_0'>评论 {{item.comment_num}}</view>
     <block wx:for="{{item.comment_list}}" wx:for-item="comment_item" wx:key="comment_id">
-      <view url='' class="comment_line" bindtap='addComment' id='comment_{{comment_item.comment_id}}' data-pos='{{comment_item.comment_id}}' data-type="second" data-item="{{comment_item}}">
+      <view class="comment_line" bindtap='addComment' id='comment_{{comment_item.comment_id}}' data-pos='{{comment_item.comment_id}}' data-type="second" data-item="{{comment_item}}">
         <view class="comment_line_hd flex flex-align-center">
           <image class='comment_state flex-none' src='../../image/icon/sub.png' wx:if="{{comment_item.type==2}}"></image>
           <image class='comment_state flex-none' src='../../image/icon/add.png' wx:if="{{comment_item.type==1}}"></image>
@@ -87,7 +87,7 @@
             <image src="{{baseUrl + comment_item.head_image_url}}" class="avatar comment_avatar"></image>
           </view>
           <view class="comment_user_name flex-none">{{comment_item.nickname}}</view>
-          <view class="comment_time comment_time flex-1">{{comment_item.comment_time}}</view>
+          <view class="comment_time comment_time flex-1">· {{comment_item.comment_time}}</view>
         </view>
         <view class='comment_line_content'>
           {{comment_item.comment_content}}
@@ -98,7 +98,7 @@
                   <view class="comment_user_name flex-none" style='margin-left: 0px;'>
                     {{comment_reply.nickname}}<text class='reply' wx:if="{{comment_reply.to_nickname}}">回复</text><text wx:if="{{comment_reply.to_nickname}}">{{comment_reply.to_nickname}}</text>
                   </view>
-                  <view class="comment_time flex-1">{{comment_reply.comment_time}}</view>
+                  <view class="comment_time flex-1">· {{comment_reply.comment_time}}</view>
                 </view>
                 <view class='comment_reply_content'>
                   {{comment_reply.comment_content}}
@@ -113,5 +113,5 @@
   </view>
 </scroll-view>
 <view class='input_container {{input_focus ? "input_container_focus" : ""}}'>
-  <input type='text' class='input' value='{{input_value}}' placeholder='{{input_placeholder}}' placeholder-stype='color:rgba(200,200,200,0.3);' focus='{{input_focus}}' bindconfirm="inputConfirm" bindblur='inputBlur' confirm-type="done" cursor-spacing="4"/>
+  <input type='text' class='input' value='{{input_value}}' placeholder='{{input_placeholder}}' placeholder-stype='color:rgba(200,200,200,0.3);' focus='{{input_focus}}' bindconfirm="inputConfirm" bindblur='inputBlur' confirm-type="done" cursor-spacing="5"/>
 </view>

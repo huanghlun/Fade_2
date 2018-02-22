@@ -87,27 +87,32 @@ Page({
     wx.showLoading({
       title: '正在发布'
     })
-    wx.createSelectorQuery().select("#moveableView").boundingClientRect(function(rect){
-      console.log(rect);
-      var images = [];
-      for(var i = 0; i < that.data.post_imgs.length; i++) {
-        var x = Math.round(rect.left / that.data.post_imgs[i].width * 1000);
-        var y = Math.round(rect.top / that.data.post_imgs[i].height * 1000);
-        var temp = {
-          image_cut_size: that.data.post_imgs[i].cut_size,
-          image_size: that.data.post_imgs[i].img_size,
-          image_coordinate: x+":"+y
+    wx.createSelectorQuery().select("#movableArea").boundingClientRect(function(rect1) { //父元素边界值
+      console.log(rect1);
+      var x1 = rect1.left;
+      var y1 = rect1.top;
+      wx.createSelectorQuery().select("#movableView").boundingClientRect(function (rect) {
+        console.log(rect);
+        var images = [];
+        for (var i = 0; i < that.data.post_imgs.length; i++) {
+          var x = Math.round((rect.left - x1) / that.data.post_imgs[i].width * 1000);
+          var y = Math.round((rect.top - y1) / that.data.post_imgs[i].height * 1000);
+          var temp = {
+            image_cut_size: that.data.post_imgs[i].cut_size,
+            image_size: that.data.post_imgs[i].img_size,
+            image_coordinate: x + ":" + y
+          }
+          images.push(temp);
         }
-        images.push(temp);
-      }
-      console.log(images);
-      var note = {
-        user_id: app.globalData.fadeuserInfo.user_id,
-        nickname: app.globalData.fadeuserInfo.nickname,
-        head_image_url: app.globalData.fadeuserInfo.head_image_url,
-        note_content: that.data.note_content,
-        images: images
-      };
+        console.log(images);
+        var note = {
+          user_id: app.globalData.fadeuserInfo.user_id,
+          nickname: app.globalData.fadeuserInfo.nickname,
+          head_image_url: app.globalData.fadeuserInfo.head_image_url,
+          note_content: that.data.note_content,
+          note_area: that.data.send_pos == true ? that.data.note_position : undefined,
+          images: images
+        };
         wx.uploadFile({
           url: app.globalData.baseUrl + 'addNote',
           filePath: that.data.post_imgs_url[that.data.photo_index] || "",
@@ -150,7 +155,8 @@ Page({
             })
           }
         })
-      
+
+      }).exec();
     }).exec();
   },
   switch1Change: function(event) {

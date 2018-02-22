@@ -22,7 +22,7 @@ Page({
     console.log(this.data.item);
     this.setData({
       skip_type: option.type,
-      item: app.globalData.detail_item,
+      item: option.type == 0 ? app.globalData.detail_item : null,
       baseUrl: app.globalData.baseUrl,
       windowHeight: app.globalData.windowHeight
     })
@@ -31,8 +31,9 @@ Page({
         scrollIntoView: "comment_0"
       })
     }
+    var detailItem = app.globalData.detail_item;
     wx.request({
-      url: app.globalData.baseUrl + "getNotePage/" + (app.globalData.detail_item.type == 0 ? app.globalData.detail_item.note_id : app.globalData.detail_item.origin.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/" + option.type,
+      url: app.globalData.baseUrl + "getNotePage/" + (detailItem.type && detailItem.type != 0 ? (detailItem.origin ? detailItem.origin.note_id : detailItem.target_id) : detailItem.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/" + option.type,
       method: "GET",
       header: {
         "tokenModel": JSON.stringify(app.globalData.tokenModal)
@@ -52,6 +53,12 @@ Page({
           })
         }
         else {
+          if (that.data.skip_type == 1) {
+            util.adjustImage(res2.data.note, app.globalData.windowWidth)
+            that.setData({
+              item: res2.data.note
+            })
+          }
           var comment_list = res2.data.commentQuery.list;
           for (var j = 0; j < comment_list.length; ++j) {
             comment_list[j].comment_time = util.advanceDay(comment_list[j].comment_time);
@@ -61,11 +68,11 @@ Page({
           }
           that.data.item.comment_list = comment_list;
           that.data.item.comment_start = res2.data.commentQuery.start;
-          that.data.item.xumiao_list = res2.data.noteQuery.list;
           that.data.item.xumiao_start = res2.data.noteQuery.start;
           util.updateTime(that.data.item, res2.data.note, res2.data.note);
           that.setData({
-            item: that.data.item,
+            'item.comment_list': comment_list,
+            'item.xumiao_list': res2.data.noteQuery.list,
             lowerRequest: that.data.item.comment_list.length < 10 ? false : true
           })
 
@@ -118,7 +125,8 @@ Page({
           that.data.item.comment_list.push.apply(that.data.item.comment_list, comment_list);
           that.data.item.comment_start = res2.data.start;
           that.setData({
-            item: that.data.item,
+            'item.comment_list': that.data.item.comment_list,
+            'item.comment_start': that.data.item.comment_start,
             lowerRequest: that.data.item.comment_list.length < 10 ? false : true
           })
           console.log(that.data.item);
@@ -130,41 +138,31 @@ Page({
     })
   },
   tapPhoto: function (event) {
-    var index = event.target.dataset.pos;
-    var that = this;
     var photolisturl = [];
-    // console.log("here " + "#id_" + index);
-    wx.createSelectorQuery().select("#id_" + index).fields({
-      dataset: true
-    }, function (res) {
-      console.log(res);
-      for (var i = 0; i < res.dataset.img.length; i++) {
-        photolisturl.push(res.dataset.img[i].image_url);
+    for (var i = 0; i < this.data.item.images.length; i++) {
+      photolisturl.push(this.data.baseUrl + this.data.item.images[i].image_url);
+    }
+    wx.previewImage({
+      urls: photolisturl,
+      fail: function () {
+        wx.showToast({
+          title: '图片加载失败，请稍后重试',
+          icon: 'loading'
+        })
       }
-      wx.previewImage({
-        urls: photolisturl,
-        fail: function () {
-          wx.showToast({
-            title: '图片加载失败，请稍后重试',
-            icon: 'loading'
-          })
-        }
-      })
-    }).exec();
+    })
   },
   changeSecond: function (event) {
     var type_ = event.target.dataset.type;
-    this.data.item.action = type_;
     this.setData({
-      item: this.data.item
+      'item.action': type_
     })
     var that = this;
     var temp_obj = {
       user_id: app.globalData.fadeuserInfo.user_id,
       nickname: app.globalData.fadeuserInfo.nickname,
-      note_content: that.data.item.note_content || that.data.item.origin.note_content,
       head_image_url: app.globalData.fadeuserInfo.head_image_url,
-      type: that.data.item.action,
+      "type": that.data.item.action,
       target_id: that.data.item.type == 0 ? that.data.item.note_id : that.data.item.target_id
     }
     wx.request({
@@ -184,10 +182,12 @@ Page({
           console.log("changeSecond fail");
         }
         else {
-          console.log("changeSecond success");
           util.updateTime(that.data.item, res2.data.extra, res2.data.extra);
           that.setData({
-            item: that.data.item
+            'item.add_num': that.data.item.add_num,
+            'item.sub_num': that.data.item.sub_num,
+            'item.life_str': that.data.item.life_str,
+            'item.progress_len': that.data.item.progress_len
           })
         }
       },
@@ -200,15 +200,13 @@ Page({
     var comment_id = event.target.dataset.pos || event.currentTarget.dataset.pos || 0;
     var type_ = event.target.dataset.type || event.currentTarget.dataset.type ;
     console.log(event.target.dataset);
-    var that = this;
-    console.log(comment_id);
     if(type_ == "first" || type_=="second") { //非回复评论
-      that.setData({
+      this.setData({
         input_placeholder: "发表评论"
       })
     } else { //回复评论
       console.log(event.target);
-      that.setData({
+      this.setData({
         input_placeholder: "回复：" + (event.target.dataset.nickname || event.currentTarget.dataset.nickname)
       })
     }
@@ -269,9 +267,10 @@ Page({
           temp_comment.comments = [];
           that.data.item.comment_list.push(temp_comment);
           that.setData({
-            item: that.data.item,
+            'item.comment_list': that.data.item.comment_list,
             input_value: "",
-            input_placeholder : "发表评论"
+            input_placeholder : "发表评论",
+            'item.comment_num' : ++that.data.item.comment_num
           })
         },
         fail: function () {
@@ -323,7 +322,7 @@ Page({
             }
           }
           that.setData({
-            item : that.data.item,
+            'item.comment_list' : that.data.item.comment_list,
             input_value : "",
             input_placeholder: "发表评论"
           })
@@ -334,6 +333,22 @@ Page({
             title: '发送失败'
           })
         }
+      })
+    }
+  },
+  navigateToMore: function(event) {
+    wx.navigateTo({
+      url: '../more/more?note_id=' + this.data.item.note_id + '&user_id=' + this.data.item.user_id
+    })
+  },
+  navigateToOthers: function (event) {
+    if (this.data.item.user_id == app.globalData.fadeuserInfo.user_id) {
+      wx.switchTab({
+        url: '../logs/logs'
+      })
+    } else {
+      wx.navigateTo({
+        url: '../others/others?user_id=' + this.data.item.user_id
       })
     }
   }

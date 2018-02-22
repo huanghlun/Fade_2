@@ -1,0 +1,7 @@
+/* pages/more/more.wxss */
+.comment_time {
+  padding-right: 20rpx;
+  /* font-size: 24rpx; */
+  font-size: 28rpx;
+  color: rgba(0, 0, 0, 0.5);
+}

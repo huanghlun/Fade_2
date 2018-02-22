@@ -68,7 +68,7 @@
              <view class="author_item" wx:if="{{item.target_id != 0}}" catchtap='navigateToOthers' data-userid="{{item.origin.user_id}}">@{{item.origin.nickname}}</view>
              <view>{{item.note_content || item.origin.note_content}}</view> 
           </view>
-          <view class="pos_item">广州·大学城</view>
+          <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>
           <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
         </view>
       </view>
@@ -93,57 +93,75 @@
 
 
 <block wx:for="{{fade_list}}" wx:key="note_id">
-    <view class="information_container"  bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}" hidden="{{showView!=1 ? true : false}}">
-      <view class="info_line">
-        <view class="imgContainer">
-          <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
-        </view>
-        <view class='info_flex_item info_name'>{{item.nickname}}</view>
-        <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
-        <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
-        <view class='info_flex_item_span'>
-          <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
-          <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
-        </view>
-        <view class='flex-none'>
-          <image src='../../image/icon/ellipse.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
-        </view>
+  <view class="information_container"  bindtap="navigateTo" id="id_{{item.note_id}}" data-pos="{{item.note_id}}" data-img="{{item.images}}" hidden="{{showView!=1 ? true : false}}">
+    <view class="info_line">
+      <view class="imgContainer">
+        <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
       </view>
-       <view class="content_line">
-        <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
-          <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
-            <swiper-item wx:for="{{item.images}}" wx:for-item="img_item" wx:key="{{image_id}}">
-              <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.note_id}}"></image>
-            </swiper-item>
-         </swiper> 
-        </view>  
-        <view class="content_item">
-          <view class="orgin_item">
-             <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
-             <view>{{item.note_content || item.origin.note_content}}</view> 
-          </view>
-          <view class="pos_item">广州·大学城</view>
-          <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
-        </view>
+      <view class='info_flex_item info_name'>{{item.nickname}}</view>
+      <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">续了一秒</view>
+      <view class="info_flex_item info_state" wx:if="{{item.type == 2}}">减了一秒</view>
+      <view class='info_flex_item_span'>
+        <image src='../../image/icon/add.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 1}}"></image>
+        <image src='../../image/icon/sub.png' style='width:26.82rpx; height:26.82rpx; margin-left:6.17rpx;' wx:if="{{item.type == 2}}"></image>
       </view>
-      <view class="interact_line" style='width: {{item.is_die==0 ? "200" : item.progress_len}}rpx'>
-        <view class='rest_time' wx:if="{{item.is_die == 1}}">剩余{{item.life}}</view>
-        <image src='../../image/icon/long.png' wx:if="{{item.is_die == 1}}" style='width:100%; height:50rpx; border-radius:36rpx;'></image>  
-        <view class='button_container'>
-          <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
-          <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
-            <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">+1S</view>
-            <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">-1S</view>
-            <view class='comment_btn' wx:if="{{item.action != 0 || item.is_die == 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
-              评论
-              <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1 && item.is_die == 1}}"></image>
-              <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2 && item.is_die == 1}}"></image>
-            </view>
-          </view>
-        </view>
-        <view wx:if="{{item.is_die == 0}}" class='die_comment'>
-          流传了{{item.liveTime}}分钟
-        </view>
+      <view class='flex-none'>
+        <image src='../../image/icon/ellipse.png' style='width: 41.67rpx; margin-right:28.17rpx' mode='widthFix'></image>
       </view>
     </view>
-  </block>
+      <view class="content_line">
+      <view wx:if="{{item.images.length > 0}}" style="height: {{item.show_height}}px; width: {{item.show_width}}px; margin-left: -32.33rpx; overflow:hidden;">
+        <swiper style='position:relative; width:100%; height:100%; overflow:hidden;text-align:center;' indicator-dots="{{item.images.length > 1 ? true : false}}">
+          <swiper-item wx:for="{{item.images}}" wx:for-item="img_item" wx:key="{{image_id}}">
+            <image src="{{baseUrl + img_item.image_url}}" style="height: {{img_item.real_height}}px; width:{{img_item.real_width}}px; margin-top: -{{img_item.coordinate.y}}px; margin-left: -{{img_item.coordinate.x}}px" binderror="imageError" catchtap="tapPhoto" data-pos="{{item.note_id}}"></image>
+          </swiper-item>
+        </swiper> 
+      </view>  
+      <view class="content_item">
+        <view class="orgin_item">
+            <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+            <view>{{item.note_content || item.origin.note_content}}</view> 
+        </view>
+        <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>
+        <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
+      </view>
+    </view>
+    <view class="interact_line" style='width: {{item.is_die==0 ? "200" : item.progress_len}}rpx'>
+      <view class='rest_time' wx:if="{{item.is_die == 1}}">剩余{{item.life}}</view>
+      <image src='../../image/icon/long.png' wx:if="{{item.is_die == 1}}" style='width:100%; height:50rpx; border-radius:36rpx;'></image>  
+      <view class='button_container'>
+        <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
+        <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">+1S</view>
+          <view class='xumiao_btn' catchtap='changeSecond' data-list="fade" data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0 && item.is_die == 1}}">-1S</view>
+          <view class='comment_btn' wx:if="{{item.action != 0 || item.is_die == 0}}" catchtap='navigateTo' data-comment="1" data-pos="{{item.note_id}}">
+            评论
+            <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1 && item.is_die == 1}}"></image>
+            <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2 && item.is_die == 1}}"></image>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{item.is_die == 0}}" class='die_comment'>
+        流传了{{item.liveTime}}分钟
+      </view>
+    </view>
+  </view>
+</block>
+  
+<block wx:for="{{fans_list}}" wx:for-item="fans_item" wx:key="user_id">
+  <view class='notice_item flex flex-align-center' bindtap='navigateToOthers' data-userid="{{fans_item.user_id}}" hidden="{{showView!=2 ? true : false}}">
+    <view class="imgContainer">
+      <image src="{{baseUrl + fans_item.head_image_url}}" class="avatar"></image>
+    </view>
+    <view class='notice_item_hd flex-1'>
+      <view class='notice_item_content_hd' style='color: #333;'>
+        {{fans_item.nickname}}
+      </view>
+      <view class='notice_item_content info_state' style='margin-left:0px;'>{{fans_item.summary || "他/她没有设置个性签名"}}</view>
+    </view>
+    <view class='concern_btn flex-none' style="background-color : {{fans_item.isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}" catchtap='clickConcernBtn' data-userid="{{fans_item.user_id}}">
+       <text style='color:white;' wx:if="{{fans_item.isConcern == 0}}" data-concern="0">关注</text>  
+        <text style='color:rgb(41, 171, 226);' wx:if="{{fans_item.isConcern == 1}}" data-concern="1">已关注</text>  
+    </view>
+  </view>
+</block>
