@@ -25,30 +25,13 @@
     </view>  
     <view class="content_item">
       <view class="orgin_item">
-          <view class="author_item" wx:if="{{item.target_id != 0}}">@{{item.origin.nickname}}</view>
+          <view class="author_item" wx:if="{{item.target_id != 0}}"><text catchtap='navigateToOthers' data-userid="{{item.origin.user_id}}">@{{item.origin.nickname}}</text></view>
           <view>{{item.note_content || item.origin.note_content}}</view> 
       </view>
       <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>
       <view class="desc_item line18">共{{item.type == 0 ? item.comment_num : item.origin.comment_num}}条评论 {{item.type == 0 ? (item.add_num - item.sub_num) : (item.origin.add_num - item.origin.sub_num)}}续秒</view>
     </view>
   </view>
-  <!-- <view class="interact_line" style='width: {{item.progress_len}}rpx'>
-    <view class='rest_time'>剩余{{item.life}}</view>
-    <image src='../../image/icon/long.png' style='width:100%; height:50rpx; border-radius:36rpx;'></image>  
-    <view class='button_container'>
-      <image src='../../image/icon/short.png' style='width:100%; height:100%;'></image>
-      <view style='width: 100%; height: 100%; position: absolute; top:0px; left:0px; padding: 0px;'>
-        <view class='xumiao_btn' catchtap='changeSecond' data-type='1' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">+1S</view>
-        <view class='xumiao_btn' catchtap='changeSecond' data-type='2' data-pos='{{item.note_id}}' wx:if="{{item.action == 0}}">-1S</view>
-
-        <view class='comment_btn' wx:if="{{item.action != 0}}" catchtap='addComment' data-type="first">
-          评论
-          <image src='../../image/icon/add.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 10rpx 14rpx 0rpx;' wx:if="{{item.action == 1}}"></image>
-          <image src='../../image/icon/sub.png' style='width:20.82rpx; height:20.82rpx; float:right;margin:14rpx 14rpx 10rpx 0rpx;' wx:if="{{item.action == 2}}"></image>
-        </view>
-      </view>
-    </view>
-  </view> -->
   <view class="interact_line" style='width: {{item.is_die==0 ? "200" : item.progress_len}}rpx'>
     <view class='rest_time' wx:if="{{item.is_die == 1}}">剩余{{item.life}}</view>
     <image src='../../image/icon/long.png' wx:if="{{item.is_die == 1}}" style='width:100%; height:50rpx; border-radius:36rpx;'></image>  

@@ -1,10 +1,10 @@
 <!--pages/search/search.wxml-->
-<view class="weui-search-bar" style='background-color: white; border-style: none;'>
+<view class="weui-search-bar" style='border-style: none;'>
   <view class="weui-search-bar__form" style='border-radius: 18rpx; background: #efeff4 !important;'>
       <view class="weui-search-bar__box" style='border-radius: 18rpx;'>
           <icon class="weui-icon-search_in-box" type="search" size="12"></icon>
           <input type="text" class="weui-search-bar__input" placeholder="搜索Fade、用户" focus="{{inputShowed}}" bindfocus='showInput' bindinput="inputTyping"  value="{{inputVal}}" style='background-color: #efeff4;' bindconfirm='confirmSearch' confirm-type='search'/>
-          <view class="weui-icon-clear" wx:if="{{inputVal.length > 0}}" bindtap="clearInput">
+          <view class="weui-icon-clear" hidden="{{inputVal.length <= 0}}" bindtap="clearInput">
               <icon type="clear" size="12"></icon>
           </view>
       </view>
@@ -43,6 +43,8 @@
   <view class='flex-none' style='width: 2rpx; height: 32rpx; background-color:#e6e6e6;'></view>
   <view class='hd_item flex-none {{type == 2 ? "hd_item_selected" : ""}}' bindtap='switchView' data-type='2' style='border-bottom-width: 2rpx;'>Fade</view>
 </view>
+
+<view class='mask' hidden='{{!inputShowed}}' style='width: {{windowWidth}}px; height:{{windowHeight}}px'></view>
 
 <block wx:for="{{userList}}" wx:for-item="user_item" wx:key="user_id">
   <view class='notice_item flex flex-align-center' hidden='{{type != 1}}' bindtap='navigateToOthers' data-userid="{{user_item.user_id}}">

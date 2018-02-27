@@ -19,10 +19,15 @@ Page({
   },
   onLoad: function (option){
     var that = this;
+    var detailItem = app.globalData.detail_item;
+    if(detailItem.type != 0 && detailItem.origin) { //不为原贴且有show_width，赋值一下showWidth
+      detailItem.origin.show_width = detailItem.show_width;
+      detailItem.origin.show_height = detailItem.show_height;
+    }
     console.log(this.data.item);
     this.setData({
       skip_type: option.type,
-      item: option.type == 0 ? app.globalData.detail_item : null,
+      item: option.type == 0 ? (detailItem.type == 0 ? detailItem : detailItem.origin) : null,
       baseUrl: app.globalData.baseUrl,
       windowHeight: app.globalData.windowHeight
     })
@@ -31,7 +36,6 @@ Page({
         scrollIntoView: "comment_0"
       })
     }
-    var detailItem = app.globalData.detail_item;
     wx.request({
       url: app.globalData.baseUrl + "getNotePage/" + (detailItem.type && detailItem.type != 0 ? (detailItem.origin ? detailItem.origin.note_id : detailItem.target_id) : detailItem.note_id) + "/" + app.globalData.fadeuserInfo.user_id + "/" + option.type,
       method: "GET",

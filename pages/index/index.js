@@ -38,10 +38,11 @@ Page({
     })
     //消失动画
     var animation = wx.createAnimation({
-      duration: 1000,
+      duration: 1500,
       timingFunction: "ease",
     })
     this.animation = animation;
+    this.animation.scale(0, 0).step()
     this.animation.height(0).step()
     this.setData({
       animationData: animation.export()
@@ -53,7 +54,7 @@ Page({
   onShow: function() {
     var index = app.globalData.detail_item_index;
     if(index != -1) {
-      this.data.information_list[index] = app.globalData.detail_item;
+      util.updateTime(this.data.information_list[index], app.globalData.detail_item, app.globalData.detail_item.origin || app.globalData.detail_item);
       this.setData({
         information_list: this.data.information_list
       })
@@ -160,8 +161,8 @@ Page({
           })
         }
         else {
-          var temp_array = new Array();
-          temp_array.push.apply(temp_array, that.data.information_list);
+          // var temp_array = new Array();
+          // temp_array.push.apply(temp_array, that.data.information_list);
           util.cutArray(that.data.information_list, res2.data.list); //终极查重
           for (var i = 0; i < res2.data.updateList.length; i++) {
             util.updateInformation(i, res2.data.updateList, that.data.information_list, that);
@@ -170,6 +171,7 @@ Page({
           for (var i = 0; i < res2.data.list.length; i++) {
             util.addInformation(i, res2.data.list, that.data.information_list, that.data.windowWidth, "unshift");
           }
+          util.noteIfDie(that);
           that.setData({
             uphidden: true,
             sub_list: that.data.sub_list,

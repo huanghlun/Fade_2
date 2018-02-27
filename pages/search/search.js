@@ -24,6 +24,8 @@ Page({
     liveFinish: false,
     tapMore: false,
     baseUrl: app.globalData.baseUrl,
+    windowWidth: app.globalData.windowWidth,
+    windowHeight: app.globalData.windowHeight,
     nodes: [{
       name: 'a',
       attrs: {
@@ -135,9 +137,16 @@ Page({
     console.log(this.data.inputVal);
     switch(this.data.type) {
       case "1" :
+        this.setData({userList: [], tapMore: false});
         this.searchUser(this.data.inputVal);
         break;
       case "2" :
+        this.setData({ 
+          fadeList: [],
+          liveList: [],
+          tapMore: false
+        });
+        console.log(this.data.fadeList);
         this.searchNote(this.data.inputVal, 1);
         break;
     }

@@ -13,11 +13,11 @@
         <view class="imgContainer" catchtap='navigateToOthers' data-userid="{{item.user_id}}">
           <image src="{{baseUrl + item.head_image_url}}" class="avatar"></image>
         </view>
-        <view class='info_flex_item info_name' wx:if="{{!item.addUsers}}" catchtap='navigateToOthers' data-userid="{{item.user_id}}">{{item.nickname}}</view>
-        <view class='info_flex_item info_name' wx:if="{{item.addUsers}}">
-          <block wx:for="{{item.addUsers.length > 3 ? item.addUsers.splice(0,3) : item.addUsers}}" wx:for-item="adduser" wx:key="user_id">
-            {{adduser.nickname}}
-          </block>
+        <view class='info_flex_item info_name' wx:if="{{!item.addUsers || item.addUsers.length <= 1}}" catchtap='navigateToOthers' data-userid="{{item.user_id}}">{{item.nickname}}</view>
+        <view class='info_flex_item info_name' wx:if="{{item.addUsers && item.addUsers.length >= 2}}">
+          <text wx:if="{{item.addUsers.length == 2}}">{{item.addUsers.join("和")}}</text>
+          <text wx:if="{{item.addUsers.length == 3}}">{{item.addUsers[0]+"、"+item.addUsers[1]+"和"+item.addUsers[2]}}</text>
+          <text wx:if="{{item.addUsers.length > 3}}">{{item.addUser.slice(0,3).join("、")}}</text>
         </view>
         <view class="info_flex_item info_state" wx:if="{{item.type == 1}}">
           <text wx:if="{{item.addUsers.length>3}}">等</text>
@@ -47,7 +47,7 @@
         </view>  
         <view class="content_item">
           <view class="orgin_item">
-              <view class="author_item" wx:if="{{item.target_id != 0}}" catchtap='navigateToOthers' data-userid="{{item.origin.user_id}}">@{{item.origin.nickname}}</view>
+              <view class="author_item" wx:if="{{item.target_id != 0}}"><text catchtap='navigateToOthers' data-userid="{{item.origin.user_id}}">@{{item.origin.nickname}}</text></view>
               <view>{{item.note_content || item.origin.note_content}}</view> 
           </view>
           <view class="pos_item" wx:if="{{item.note_area}}">{{item.note_area}}</view>

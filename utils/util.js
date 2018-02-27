@@ -252,7 +252,7 @@ function json2Form(json) {
 function noteIfDie(that) {
   wx.createSelectorQuery().selectAll(".information_container").boundingClientRect(function (rects) {
     rects.forEach(function (res) {
-      if (res.top > 0 && res.top <= parseFloat(that.data.windowHeight * 4 / 5)) {
+      if (res.top > 0 && res.top <= parseFloat(that.data.windowHeight * 3 / 4)) {
         // console.log(res.id + " " + res.top + " " + that.data.windowHeight)
         for (var i = 0; i < that.data.sub_list.length; i++) {
           if (res.id == "id_" + that.data.sub_list[i].note_id) {
@@ -270,6 +270,10 @@ function noteIfDie(that) {
         }
       }
     })
+    // setTimeout(function(){
+    //   cutArray(that.data.sub_list, that.data.information_list);
+    //   that.data.sub_list = [];
+    // }, 2000);
     that.setData({
       information_list: that.data.information_list,
       sub_list: that.data.sub_list

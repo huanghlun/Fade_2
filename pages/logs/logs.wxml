@@ -1,14 +1,14 @@
 <!--logs.wxml-->
-<navigator url='../self/self' hover-stay-time='200'>
+<view>
   <view class="img_name_container">
     <image class="log_avatar" src="{{baseUrl + fadeuserInfo.head_image_url}}"></image>
     <view class="log_name_qianming">
       <text class="nickname">{{fadeuserInfo.nickname}}</text>
       <text class='fadename'>{{fadeuserInfo.fade_name}}</text> 
     </view>
-    <view class='concern_btn flex-none' style="background-color : {{isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}" wx:if="{{user_id != my_id}}">
-      <text style='color:white;' wx:if="{{isConcern == 0}}">关注</text>  
-      <text style='color:rgb(41, 171, 226);' wx:if="{{isConcern == 1}}">已关注</text>  
+    <view class='concern_btn flex-none' style="background-color : {{isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}" wx:if="{{user_id != my_id}}" catchtap='clickConcernBtn'>
+      <text style='color:white;' wx:if="{{isConcern == 0}}" data-concern="0">关注</text>  
+      <text style='color:rgb(41, 171, 226);' wx:if="{{isConcern == 1}}" data-concern="1">已关注</text> 
     </view>
   </view>
   <view class="qianming">
@@ -18,7 +18,7 @@
     <image src='../../image/icon/school.png' mode='widthFix' class='school_image'></image>
     <text>{{fadeuserInfo.school_name}}</text>
   </view>
-</navigator>
+</view>
 <view class="fans_line">
   <view class="fans_line_item {{showView==0?'fans_line_item_selected':''}}" bindtap='switchView' data-type='0'>
     <view class="fans_item_ct">{{live_list.length || 0}}</view>

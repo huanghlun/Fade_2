@@ -17,3 +17,17 @@
   font-size: 32rpx;
   padding: 40rpx 0px 16rpx;
 }
+
+.mask {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  background-color: rgba(105, 105, 105, 0.9);
+}
+
+.weui-search-bar, .hd_line {
+  position: relative;
+  z-index: 2;
+  background: white;
+}

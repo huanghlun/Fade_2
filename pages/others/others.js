@@ -187,6 +187,39 @@ Page({
     })
   },
 
+  //点击关注按钮
+  clickConcernBtn: function (event) {
+    var concern = event.target.dataset.concern; //0为未关注
+    var star_id = this.data.user_id;
+
+    if (concern == 0) {
+      var that = this;
+      wx.request({
+        url: app.globalData.baseUrl + "concern",
+        method: "POST",
+        header: {
+          "tokenModel": JSON.stringify(app.globalData.tokenModal),
+          "Content-type": "application/x-www-form-urlencoded"
+        },
+        data: {
+          fans_id: app.globalData.fadeuserInfo.user_id,
+          star_id: star_id
+        },
+        success: function (res) {
+          console.log(res);
+          if (res.data.success) {
+            that.setData({
+              isConcern: 1
+            })
+          }
+        },
+        error: function (err) {
+          console.log(err);
+        }
+      })
+    }
+  },
+
   //获取自己原创fade
   getOtherPersonNote: function (user_id, my_id, start, mark) {
     var that = this;
