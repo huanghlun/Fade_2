@@ -4,8 +4,8 @@
     "pages/index/index",
     "pages/notice/notice",
     "pages/noticeDetail/noticeDetail",
-    "pages/logs/logs",
-    "pages/self/self",
+    "pages/own/own",
+    "pages/ownedit/ownedit",
     "pages/detail/detail",
     "pages/post/post",
     "pages/temp/temp",
@@ -46,7 +46,7 @@
         "selectedIconPath": "image/icon/search.png"
       },
       {
-        "pagePath": "pages/logs/logs",
+        "pagePath": "pages/own/own",
         "iconPath": "image/icon/own_origin.png",
         "selectedIconPath": "image/icon/own.png"
       }

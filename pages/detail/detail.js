@@ -346,14 +346,6 @@ Page({
     })
   },
   navigateToOthers: function (event) {
-    if (this.data.item.user_id == app.globalData.fadeuserInfo.user_id) {
-      wx.switchTab({
-        url: '../logs/logs'
-      })
-    } else {
-      wx.navigateTo({
-        url: '../others/others?user_id=' + this.data.item.user_id
-      })
-    }
+    util.navigateToOther(this.data.item.user_id);
   }
 })

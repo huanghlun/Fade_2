@@ -165,3 +165,21 @@
     </view>
   </view>
 </block>
+
+<block wx:for="{{concern_list}}" wx:for-item="concern_item" wx:key="user_id">
+  <view class='notice_item flex flex-align-center' bindtap='navigateToOthers' data-userid="{{concern_item.user_id}}" hidden="{{showView!=3 ? true : false}}">
+    <view class="imgContainer">
+      <image src="{{baseUrl + concern_item.head_image_url}}" class="avatar"></image>
+    </view>
+    <view class='notice_item_hd flex-1'>
+      <view class='notice_item_content_hd' style='color: #333;'>
+        {{concern_item.nickname}}
+      </view>
+      <view class='notice_item_content info_state' style='margin-left:0px;'>{{concern_item.summary || "他/她没有设置个性签名"}}</view>
+    </view>
+    <!-- <view class='concern_btn flex-none' style="background-color : {{concern_item.isConcern == 0 ? 'rgb(41, 171, 226);' : 'white'}}" catchtap='clickConcernBtn' data-userid="{{concern_item.user_id}}">
+      <text style='color:white;' wx:if="{{concern_item.isConcern == 0}}" data-concern="0">关注</text>  
+      <text style='color:rgb(41, 171, 226);' wx:if="{{concern_item.isConcern == 1}}" data-concern="1">已关注</text>  
+    </view>  -->
+  </view>
+</block>

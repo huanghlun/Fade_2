@@ -308,7 +308,7 @@ function getPersonPage(that, app, user_id, my_id) {
         addInformation(i, res.data.query.list, that.data.live_list, app.globalData.windowWidth, "push");
       }
       that.setData({
-        isConcern: res.data.isConcern,
+        isConcern: res.data.isConcern == undefined ? -1 : res.data.isConcern,
         fadeuserInfo: res.data.user,
         live_list: that.data.live_list,
         live_start: res.data.query.start
@@ -430,7 +430,7 @@ function getConcerns(that, app, user_id, start, mark) {
       }
       that.setData({
         concern_start: mark == 'push' ? res.data.start : that.data.concern_start,
-        concern_list: that.data.fans_list,
+        concern_list: that.data.concern_list,
         concern_finish: res.data.list.length >= 20 ? false : true
       })
     },
@@ -502,6 +502,19 @@ function changeSecond(that, app, event) {
   })
 }
 
+//跳转去个人页面
+function navigateToOther(userid) {
+  if (userid == app.globalData.fadeuserInfo.user_id) {
+    wx.switchTab({
+      url: '../own/own'
+    })
+  } else {
+    wx.navigateTo({
+      url: '../others/others?user_id=' + userid
+    })
+  }
+}
+
 module.exports = {
   formatTime: formatTime,
   CalPhotoHeight: CalPhotoHeight,
@@ -520,5 +533,6 @@ module.exports = {
   getMyNote: getMyNote,
   getFans: getFans,
   getConcerns: getConcerns,
-  changeSecond: changeSecond
+  changeSecond: changeSecond,
+  navigateToOther: navigateToOther
 }

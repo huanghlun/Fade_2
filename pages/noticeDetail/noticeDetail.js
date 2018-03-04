@@ -127,7 +127,7 @@ Page({
   navigateToOther: function(event) {
     if (event.currentTarget.dataset.userid == app.globalData.fadeuserInfo.user_id) {
       wx.switchTab({
-        url: '../logs/logs'
+        url: '../own/own'
       })
     } else {
       wx.navigateTo({

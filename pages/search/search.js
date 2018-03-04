@@ -280,15 +280,7 @@ Page({
 
   navigateToOthers: function (event) {
     console.log("navigateTo :" + event.currentTarget.dataset.userid);
-    if (event.currentTarget.dataset.userid == app.globalData.fadeuserInfo.user_id) {
-      wx.switchTab({
-        url: '../logs/logs'
-      })
-    } else {
-      wx.navigateTo({
-        url: '../others/others?user_id=' + event.currentTarget.dataset.userid
-      })
-    }
+    util.navigateToOther(event.currentTarget.dataset.userid);
   }
 
 })

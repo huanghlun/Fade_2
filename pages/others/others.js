@@ -1,4 +1,4 @@
-//logs.js
+//own.js
 var util = require('../../utils/util.js')
 var app = getApp();
 

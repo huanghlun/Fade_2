@@ -1,4 +1,4 @@
-//logs.js
+//own.js
 var util = require('../../utils/util.js')
 var app = getApp();
 
@@ -109,16 +109,16 @@ Page({
             //首次获取fans
             util.getFans(this, app, this.data.user_id, 0, "push");
           } else {
-            //更新fade看看有没有新增的
+            //更新fans看看有没有新增的
             util.getFans(this, app, this.data.user_id, 0, "unshift");
           }
           break;
         case "3":
           if (this.data.concern_list.length == 0) {
-            //首次获取fans
+            //首次获取关注
             util.getConcerns(this, app, this.data.user_id, 0, "push");
           } else {
-            //更新fade看看有没有新增的
+            //更新关注人员看看有没有新增的
             util.getConcerns(this, app, this.data.user_id, 0, "unshift");
           }
           break;

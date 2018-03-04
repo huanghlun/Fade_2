@@ -1,2 +1,2 @@
 <!--pages/others/others.wxml-->
-<include src="../logs/logs" />
+<include src="../own/own" />
